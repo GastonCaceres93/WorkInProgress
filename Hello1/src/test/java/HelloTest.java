@@ -1,4 +1,4 @@
-package Test;
+package src.test.java;
 
 import org.junit.After;
 import org.junit.AfterClass;
