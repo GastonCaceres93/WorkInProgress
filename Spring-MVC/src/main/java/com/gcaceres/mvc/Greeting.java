@@ -10,8 +10,23 @@ public class Greeting {
 
     @RequestMapping("/greeting")
     public String greeting(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
-        return "greeting";
+        
+    	//adding 
+    	model.addAttribute("name", name);
+
+        //return must be name of the template to render
+        return "salute";
+    }
+    
+
+    @RequestMapping("/goodbye")
+    public String goodbye(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
+        
+    	//adding 
+    	model.addAttribute("name", name);
+
+        //return must be name of the template to render
+        return "goodbye";
     }
 
 }
