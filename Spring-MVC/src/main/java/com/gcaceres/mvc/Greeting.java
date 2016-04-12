@@ -15,7 +15,7 @@ public class Greeting {
     	model.addAttribute("name", name);
 
         //return must be name of the template to render
-        return "salute";
+        return "saluteNew";
     }
     
 
