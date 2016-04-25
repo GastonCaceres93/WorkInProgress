@@ -7,23 +7,16 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class SearchPage extends AutomationPage {
+public class SearchPage  {
 
-	private static final String SEARCH_TITLE = "";
+	private static final String SEARCH_TITLE = " | Search Results | Automation Training";
 	private static final String NO_RESULTS_TEXT = "Nothing Found";
 
 	@FindBy(tagName = "article")
 	private List<WebElement> searchResults;
 
-	private String searchQuery;
-
-	@Override
 	public boolean isCorrectPage(WebDriver webDriver) {
-		StringBuilder searchPageTitle = new StringBuilder();
-		searchPageTitle.append(searchQuery);
-		searchPageTitle.append(SEARCH_TITLE);
-
-		return SEARCH_TITLE.equals(webDriver.getTitle());
+		return webDriver != null && webDriver.getTitle().endsWith(SEARCH_TITLE);
 	}
 
 	public boolean searchHasResults() {

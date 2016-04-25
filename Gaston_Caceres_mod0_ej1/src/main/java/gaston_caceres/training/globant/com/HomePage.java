@@ -7,7 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 //works as search result page to
-public class HomePage extends AutomationPage {
+public class HomePage {
 
 	private static final String HOME_TITLE = "Automation Training | Aprender a automatizar en un solo sitio";
 
@@ -18,7 +18,6 @@ public class HomePage extends AutomationPage {
 	@FindBy(tagName = "article")
 	private Set<WebElement> articles;
 
-	@Override
 	public boolean isCorrectPage(WebDriver webDriver) {
 		return HOME_TITLE.equals(webDriver.getTitle());
 	}

@@ -2,13 +2,15 @@ package gaston_caceres.training.globant.com;
 
 import java.util.Set;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class ContactPage extends AutomationPage {
+public class ContactPage {
 
-	private static final String CONTACT_TITLE = "";
+	private static final String CONTACT_TITLE = "Contact us | Automation Training";
+	private static final String CONTACT_SUCCESSFUL = "Thank you for contacting us.";
 
 	@FindBy(id = "cntctfrm_contact_name")
 	private WebElement nameTxtBox;
@@ -28,13 +30,34 @@ public class ContactPage extends AutomationPage {
 	@FindBy(xpath = ".//*[@id='comments']//li")
 	private Set<WebElement> coments;
 
-	@Override
 	public boolean isCorrectPage(WebDriver webDriver) {
 		return CONTACT_TITLE.equals(webDriver.getTitle());
 	}
 
-	public void fillForm(String name, String email, String subject, String message) {
+	public ContactPage fillForm(String name, String email, String subject, String message) {
+		if (validFields()) {
+			nameTxtBox.sendKeys(name);
+			emailTxtBox.sendKeys(email);
+			subjectTxtBox.sendKeys(subject);
+			messageAreaBox.sendKeys(message);
+		}
+		return this;
+	}
 
+	public ContactPage sendForm() {
+		submitButton.click();
+		return this;
+	}
+
+	private boolean validFields() {
+		
+		return nameTxtBox != null && emailTxtBox != null && subjectTxtBox != null && messageAreaBox != null
+				&& subjectTxtBox != null && submitButton != null;
+	}
+	
+	public boolean verifyContactResult(WebDriver webDriver){
+		webDriver.findElement(By.id("post-2"));
+		return true;
 	}
 
 }

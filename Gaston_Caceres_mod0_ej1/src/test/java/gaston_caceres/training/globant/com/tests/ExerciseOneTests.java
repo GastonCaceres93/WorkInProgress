@@ -14,14 +14,12 @@ import gaston_caceres.training.globant.com.SearchPage;
 
 public class ExerciseOneTests {
 
-	private WebDriver webDriver;
-	private AutomationPage page;
-
-	private static final String SITE = "http://10.28.148.127/wordpress";
+	// private WebDriver webDriver;
+	private AutomationPage automationPage;
 
 	@BeforeClass
 	public void setUpTest() {
-		webDriver = new FirefoxDriver();
+		automationPage = new AutomationPage(new FirefoxDriver());
 	}
 
 	/*
@@ -29,9 +27,8 @@ public class ExerciseOneTests {
 	 */
 	@Test
 	public void testCase_1() {
-		webDriver.get(SITE);
-		HomePage page = PageFactory.initElements(webDriver, HomePage.class);
-		assert (page.isCorrectPage(webDriver));
+		automationPage.goToHome();
+		assert (automationPage.isHomePage());
 	}
 
 	/*
@@ -39,9 +36,7 @@ public class ExerciseOneTests {
 	 */
 	@Test
 	public void testCase_2() {
-		SearchPage search = page.goToSearch("waaazzzzaaaapppp", webDriver); 
-		
-		assert (search.isCorrectPage(webDriver));
+		SearchPage search = automationPage.search("waaaazzzaaaaappp");
 
 		assert (search.searchHasResults());
 	}
@@ -57,13 +52,15 @@ public class ExerciseOneTests {
 	 */
 	@Test
 	public void testCase_4() {
-		page.goToContact(webDriver);
-		// page = PageFactory.initElements(webDriver, ContactPage.class);
-
-		assert (page.isCorrectPage(webDriver));
-
-		((ContactPage) page).fillForm("Gaston", "gaston.caceres@globant.com", "submit completo", "completo, todo bien");
-
+		// automationPage.goToContact().isContactPage();
+		ContactPage contact = automationPage.goToContact();
+		
+//		assert (automationPage.isContactPage());
+		
+//		automationPage.makeContact("Gaston", "gaston.caceres@globant.com", "submit completo", "completo, todo bien");
+		contact.fillForm("Gaston", "gaston.caceres@globant.com", "submit completo", "completo, todo bien").sendForm();
+		
+		assert(contact.verifyContactResult());
 	}
 
 	/*
@@ -77,7 +74,7 @@ public class ExerciseOneTests {
 	}
 
 	/*
-	 * Go to the Home Page Using the calendar: Verify how many days of the
+	 * Go to the Home Page. Using the calendar: Verify how many days of the
 	 * current month have posts. Enter to the first day with a post. Count how
 	 * many post that day has and print the titles in the console
 	 */
@@ -87,7 +84,7 @@ public class ExerciseOneTests {
 
 	@AfterClass
 	public void tearDownTest() {
-		webDriver.quit();
+		automationPage.quit();
 	}
 
 }
