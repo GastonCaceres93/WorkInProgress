@@ -4,6 +4,7 @@ import static gaston_caceres.training.globant.com.AutomationLocators.CONTACT_LIN
 import static gaston_caceres.training.globant.com.AutomationLocators.HOME_LINK;
 import static gaston_caceres.training.globant.com.AutomationLocators.SEARCH_BOX_ID;
 import static gaston_caceres.training.globant.com.AutomationLocators.CALENDAR_ID;
+import static gaston_caceres.training.globant.com.AutomationLocators.CONTACT_FORM_FIELD_ID;
 import static gaston_caceres.training.globant.com.AutomationLocators.POSTS_TAG;
 
 import java.util.Set;
@@ -37,8 +38,8 @@ public class AutomationPage {
 	@FindBy(tagName = POSTS_TAG)
 	private Set<WebElement> articles;
 
-	private ContactPage contactPage;
-	private SearchPage searchPage;
+//	private ContactPage contactPage;
+//	private SearchPage searchPage;
 
 	public AutomationPage(WebDriver webDriver) {
 		this.webDriver = webDriver;
@@ -56,46 +57,56 @@ public class AutomationPage {
 		// return homePage.isCorrectPage(webDriver);
 		return HOME_TITLE.equals(webDriver.getTitle());
 	}
+	
+	public SearchPage goToSearch(){
+		return new SearchPage(webDriver);
+	}
+	
+	public ContactPage goToContact(){
+		return new ContactPage(webDriver);
+	}
 
 	/* ====serch===== */
-	public SearchPage search(String query) {
-		searchBox.sendKeys(query);
-		searchBox.submit();
-		return PageFactory.initElements(webDriver, SearchPage.class);
-		// return this;
-	}
+//	public SearchPage search(String query) {
+//		searchBox.sendKeys(query);
+//		searchBox.submit();
+//		return PageFactory.initElements(webDriver, SearchPage.class);
+//		// return this;
+//	}
 
-	public boolean isSearchResultsPage() {
-		return searchPage.isCorrectPage(webDriver);
-	}
-
-	public boolean searchHasResults() {
-		return this.searchPage.searchHasResults();
-	}
+//	public boolean isSearchResultsPage() {
+//		return searchPage.isCorrectPage(webDriver);
+//	}
+//
+//	public boolean searchHasResults() {
+//		return this.searchPage.searchHasResults();
+//	}
 
 	/* =====contact======= */
 
-	public AutomationPage makeContact(String name, String email, String subject, String message) {
-		contactLink.click();
-		contactPage = PageFactory.initElements(webDriver, ContactPage.class);
-		contactPage.fillForm(name, email, subject, message).sendForm();
-		return this;
-	}
+//	public AutomationPage makeContact(String name, String email, String subject, String message) {
+//		contactLink.click();
+//		contactPage = PageFactory.initElements(webDriver, ContactPage.class);
+//		contactPage.fillForm(name, email, subject, message).sendForm();
+//		return this;
+//	}
+//
+//	public ContactPage goToContact() {
+//		contactLink.click();
+//		contactPage = PageFactory.initElements(webDriver, ContactPage.class);
+//		return contactPage;
+//	}
+//
+//	public boolean isContactPage() {
+//		return contactPage.isCorrectPage(webDriver);
+//	}
 
-	public ContactPage goToContact() {
-		contactLink.click();
-		contactPage = PageFactory.initElements(webDriver, ContactPage.class);
-		return contactPage;
-	}
-
-	public boolean isContactPage() {
-		return contactPage.isCorrectPage(webDriver);
-	}
-
-	public boolean isContactResponseOk() {
-		WebElement response = webDriver.findElement(By.id("cntctfrm_contact_form"));
-		return response == null;
-	}
+	//si el formulario todavia esta en pantalla significa que fallo la validacion de algun campo.
+//	public boolean isContactResponseOk() {
+//		WebElement response = webDriver.findElement(By.id(CONTACT_FORM_FIELD_ID));
+//		
+//		return response == null;
+//	}
 
 	public void quit() {
 		webDriver.quit();

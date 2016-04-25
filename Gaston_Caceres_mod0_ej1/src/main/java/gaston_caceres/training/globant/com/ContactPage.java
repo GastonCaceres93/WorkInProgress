@@ -6,12 +6,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
 public class ContactPage {
 
 	private static final String CONTACT_TITLE = "Contact us | Automation Training";
 	private static final String CONTACT_SUCCESSFUL = "Thank you for contacting us.";
 
+	private WebDriver webDriver;
+	
 	@FindBy(id = "cntctfrm_contact_name")
 	private WebElement nameTxtBox;
 
@@ -29,8 +32,13 @@ public class ContactPage {
 
 	@FindBy(xpath = ".//*[@id='comments']//li")
 	private Set<WebElement> coments;
+	
+	public ContactPage(WebDriver webDriver){
+		this.webDriver = webDriver;
+		PageFactory.initElements(webDriver, this);
+	}
 
-	public boolean isCorrectPage(WebDriver webDriver) {
+	public boolean isCorrectPage() {
 		return CONTACT_TITLE.equals(webDriver.getTitle());
 	}
 
@@ -55,7 +63,7 @@ public class ContactPage {
 				&& subjectTxtBox != null && submitButton != null;
 	}
 	
-	public boolean verifyContactResult(WebDriver webDriver){
+	public boolean verifyContactResult(){
 		webDriver.findElement(By.id("post-2"));
 		return true;
 	}

@@ -1,15 +1,13 @@
 package gaston_caceres.training.globant.com.tests;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.PageFactory;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import gaston_caceres.training.globant.com.AutomationPage;
 import gaston_caceres.training.globant.com.ContactPage;
-import gaston_caceres.training.globant.com.HomePage;
 import gaston_caceres.training.globant.com.SearchPage;
 
 public class ExerciseOneTests {
@@ -36,7 +34,9 @@ public class ExerciseOneTests {
 	 */
 	@Test
 	public void testCase_2() {
-		SearchPage search = automationPage.search("waaaazzzaaaaappp");
+		SearchPage search = automationPage.goToSearch();
+		
+		search.search("whaaaazzzzaaaaaappppp");
 
 		assert (search.searchHasResults());
 	}
@@ -55,7 +55,7 @@ public class ExerciseOneTests {
 		// automationPage.goToContact().isContactPage();
 		ContactPage contact = automationPage.goToContact();
 		
-//		assert (automationPage.isContactPage());
+		Assert.assertTrue(contact.isCorrectPage());
 		
 //		automationPage.makeContact("Gaston", "gaston.caceres@globant.com", "submit completo", "completo, todo bien");
 		contact.fillForm("Gaston", "gaston.caceres@globant.com", "submit completo", "completo, todo bien").sendForm();
