@@ -1,12 +1,10 @@
 package gaston_caceres.training.globant.com;
 
-import java.util.Set;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.PageFactory;;
 
 public class ContactPage {
 
@@ -14,7 +12,7 @@ public class ContactPage {
 	private static final String CONTACT_SUCCESSFUL = "Thank you for contacting us.";
 
 	private WebDriver webDriver;
-	
+
 	@FindBy(id = "cntctfrm_contact_name")
 	private WebElement nameTxtBox;
 
@@ -27,13 +25,13 @@ public class ContactPage {
 	@FindBy(id = "cntctfrm_contact_message")
 	private WebElement messageAreaBox;
 
-	@FindBy(xpath = ".//*[@id='cntctfrm_contact_form']/div[9]/input[4]")
-	private WebElement submitButton;
+	// @FindBy(xpath = ".//*[@id='cntctfrm_contact_form']/div[9]/input[4]")
+	// private WebElement submitButton;
 
-	@FindBy(xpath = ".//*[@id='comments']//li")
-	private Set<WebElement> coments;
-	
-	public ContactPage(WebDriver webDriver){
+	@FindBy(id = "cntctfrm_contact_form")
+	private WebElement contactForm;
+
+	public ContactPage(WebDriver webDriver) {
 		this.webDriver = webDriver;
 		PageFactory.initElements(webDriver, this);
 	}
@@ -43,7 +41,7 @@ public class ContactPage {
 	}
 
 	public ContactPage fillForm(String name, String email, String subject, String message) {
-		if (validFields()) {
+		if (validateFieldsAndClear()) {
 			nameTxtBox.sendKeys(name);
 			emailTxtBox.sendKeys(email);
 			subjectTxtBox.sendKeys(subject);
@@ -53,19 +51,27 @@ public class ContactPage {
 	}
 
 	public ContactPage sendForm() {
-		submitButton.click();
+		contactForm.submit();
 		return this;
 	}
 
-	private boolean validFields() {
-		
-		return nameTxtBox != null && emailTxtBox != null && subjectTxtBox != null && messageAreaBox != null
-				&& subjectTxtBox != null && submitButton != null;
+	private boolean validateFieldsAndClear() {
+		boolean valid = nameTxtBox != null && emailTxtBox != null && subjectTxtBox != null && messageAreaBox != null
+				&& subjectTxtBox != null;
+		if (valid) {
+			nameTxtBox.clear();
+			emailTxtBox.clear();
+			subjectTxtBox.clear();
+			messageAreaBox.clear();
+			subjectTxtBox.clear();
+		}
+		return valid;
 	}
-	
-	public boolean verifyContactResult(){
-		webDriver.findElement(By.id("post-2"));
-		return true;
+
+	public boolean verifyContactOk() {
+		boolean contactOk = false;
+		contactOk = webDriver.findElements(By.id("cntctfrm_thanks")).size() > 0;
+		return contactOk;
 	}
 
 }
