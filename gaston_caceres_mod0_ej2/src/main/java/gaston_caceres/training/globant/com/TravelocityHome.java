@@ -36,12 +36,11 @@ public class TravelocityHome {
 
 	public TravelocityHome(WebDriver webDriver) {
 		this.webDriver = webDriver;
-		this.webDriver.get(TRAVELOCITY_HOME_URL);
-		PageFactory.initElements(webDriver, this);
 	}
 
 	public TravelocityHome goHome() {
 		this.webDriver.get(TRAVELOCITY_HOME_URL);
+		PageFactory.initElements(webDriver, this);
 		return this;
 	}
 

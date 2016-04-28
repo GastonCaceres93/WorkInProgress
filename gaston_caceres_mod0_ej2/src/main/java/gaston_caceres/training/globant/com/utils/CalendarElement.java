@@ -17,26 +17,20 @@ public class CalendarElement {
 	public static final String DATE_FORMAT = "dd/MM/yyyy";
 	private static final String CALENDAR_TITLE_FORMAT = "MMM yyyy";
 
-//	private WebElement calendarPrev;
-//	private WebElement calendarNext;
 	private WebElement calendarOne;
 	private WebElement calendarTwo;
 
 	public CalendarElement(WebDriver webDriver) {
 		this.webDriver = webDriver;
-//		calendarNext = webDriver.findElement(By.cssSelector(".btn-paging.btn-secondary.next"));
-//		calendarPrev = webDriver.findElement(By.cssSelector(".btn-paging.btn-secondary.prev"));
 	}
 
 	public CalendarElement nextMonth() {
-//		calendarNext.click();
 		webDriver.findElement(By.cssSelector(".btn-paging.btn-secondary.next")).click();;
 		initCalendars();
 		return this;
 	}
 
 	public CalendarElement prevMonth() {
-//		calendarPrev.click();
 		webDriver.findElement(By.cssSelector(".btn-paging.btn-secondary.prev")).click();;
 		initCalendars();
 		return this;
@@ -69,6 +63,7 @@ public class CalendarElement {
 		return getCalendar(date) != null;
 	}
 
+	//TODO buscar mejor forma de lidiar con fecha localizada (Apr 2016 vs Abr 2016)
 	private String getDateFormated(DateTime date, String format) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
 		String formattedDate = null;
@@ -80,17 +75,15 @@ public class CalendarElement {
 			formattedDate = dateFormat.format(fs.parse(formattedDate));
 
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return formattedDate;
-//		return dateFormat.format(date.toDate());
 	}
 
 	private void initCalendars() {
-		WebElement calendarsDiv = webDriver.findElement(By.cssSelector(".cal"));
-		calendarOne = calendarsDiv.findElement(By.xpath("section[1]"));
-		calendarTwo = calendarsDiv.findElement(By.xpath("section[2]"));
+		WebElement calendarsDivContainer = webDriver.findElement(By.cssSelector(".cal"));
+		calendarOne = calendarsDivContainer.findElement(By.xpath("section[1]"));
+		calendarTwo = calendarsDivContainer.findElement(By.xpath("section[2]"));
 	}
 
 }
