@@ -1,7 +1,5 @@
 package gaston_caceres.training.globant.com.utils;
 
-import javax.swing.SortOrder;
-
 import org.joda.time.DateTime;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -20,6 +18,7 @@ public class ElementHandling {
 //			long timd = System.currentTimeMillis() + 13392000000L;
 			DateTime date = new DateTime(time);
 //			DateTime dated = new DateTime(timd);
+			
 			home.goHome();
 			FlightBooking flight = home.goFlight().oneWayTrip();
 			flight.selectDepartureDate(date);
@@ -30,10 +29,18 @@ public class ElementHandling {
 			
 			flight.adultsTraveling(1);
 			FlightSearch search = flight.searchFlights();
-			search.sortFlights(FlightSort.DURATION_SHORTEST);
 			
 			
-			search.selectFlight(1);
+			
+//			if(flight.validatePage()){
+				search.sortFlights(FlightSort.DURATION_SHORTEST);
+				search.selectFlight(1);
+				
+//			}else{
+//				System.out.println("wrong page");
+//			}
+			
+			
 
 			// SimpleDateFormat f = new SimpleDateFormat("MMM yyyy");
 			// String dateA= "abr 2016";

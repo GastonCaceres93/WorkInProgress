@@ -24,7 +24,6 @@ public class FlightSearch {
 
 	public FlightSearch(WebDriver webDriver) {
 		this.webDriver = webDriver;
-
 		initFields();
 	}
 
@@ -34,14 +33,16 @@ public class FlightSearch {
 	}
 
 	private void loadFlightsFound() {
-		WebElement container = null;
 		try {
-			container = (new WebDriverWait(webDriver, 3))
-					.until(ExpectedConditions.presenceOfElementLocated(By.id("super_dummy")));
+			//haciendo tiempo para que ordene los vuelos de acuerdo al filtro.
+			(new WebDriverWait(webDriver, 3)).until(ExpectedConditions.presenceOfElementLocated(By.id("super_dummy")));
 		} catch (Exception e) {
+			// no me interesa la excepcion, porque no existe un elemto con id
+			// super_dummy
 		} finally {
-			container = webDriver.findElement(By.id(FLIGHTS_CONTAINER_ID));
-			flightsFound = container.findElements(By.xpath("div/li"));
+			
+			flightsFound = webDriver.findElement(By.id(FLIGHTS_CONTAINER_ID))
+										.findElements(By.xpath("div/li"));
 
 		}
 	}

@@ -12,7 +12,10 @@ import org.openqa.selenium.support.PageFactory;
 
 import gaston_caceres.training.globant.com.search.FlightSearch;
 import gaston_caceres.training.globant.com.utils.CalendarElement;
+import gaston_caceres.training.globant.com.utils.ElementToValidate;
 import gaston_caceres.training.globant.com.utils.FlightsConnections;
+import gaston_caceres.training.globant.com.utils.ValidatePage;
+import gaston_caceres.training.globant.com.utils.ValidationType;
 
 public class FlightBooking {
 
@@ -41,6 +44,8 @@ public class FlightBooking {
 
 	private Set<FlightsConnections> connections;
 	private int connectionsCount = 2;
+	private String flightType;
+	private String from, to, departureDate;
 
 	public FlightBooking(WebDriver webDriver) {
 		this.webDriver = webDriver;
@@ -54,6 +59,7 @@ public class FlightBooking {
 
 	public FlightBooking oneWayTrip() {
 		oneWayTripTab.click();
+		this.flightType = "oneway";
 		return this;
 	}
 
@@ -66,6 +72,7 @@ public class FlightBooking {
 	public FlightBooking selectDepartureDate(DateTime date) {
 		webDriver.findElement(By.id("flight-departing")).click();
 		new CalendarElement(webDriver).selectDate(date);
+		this.departureDate = webDriver.findElement(By.id("flight-departing")).getText();
 		return this;
 	}
 
@@ -87,19 +94,27 @@ public class FlightBooking {
 	}
 
 	public FlightBooking selectDestinationAirport(String destinationAirport) {
+		this.to = destinationAirport;
 		this.toBox.sendKeys(destinationAirport);
 		return this;
 
 	}
 
 	public FlightBooking selectDepartureAirport(String departureAirport) {
+		this.from = departureAirport;
 		this.fromBox.sendKeys(departureAirport);
 		return this;
 	}
 
 	public FlightSearch searchFlights() {
 		webDriver.findElement(By.id("search-button")).click();
-		return new FlightSearch(webDriver);
+		FlightSearch flightSearch = new FlightSearch(webDriver);
+
+		return flightSearch;
+	}
+
+	public boolean validatePage() {
+		return new ValidatePage().validElements(webDriver,getElementsToValidate());
 	}
 
 	public FlightBooking addConnection(String from, String to, DateTime departure) {
@@ -107,5 +122,33 @@ public class FlightBooking {
 		connectionsCount++;
 		this.connections.add(connection);
 		return this;
+	}
+
+	private Set<ElementToValidate> getElementsToValidate() {
+		Set<ElementToValidate> elements = new HashSet<ElementToValidate>();
+
+		elements.add(new ElementToValidate(By.xpath(".//*[@Id='columnAFilter']/h3"), "Filter your results by",
+				ValidationType.IS_ELEMENT_PRESENT, ValidationType.COMPLETE_TEXT));
+
+		elements.add(new ElementToValidate(null, getFlightSearchURL(), ValidationType.PARTIAL_URL));
+
+		elements.add(new ElementToValidate(By.id("wizardSearch"), null, ValidationType.IS_ELEMENT_PRESENT));
+
+		elements.add(new ElementToValidate(By.id("flightModuleLisdt"), null, ValidationType.IS_ELEMENT_PRESENT));
+		
+		
+		// elements.add(new ElementToValidate(By.id("departureAirport"),
+		// from.toUpperCase(), ValidationType.PARTIAL_TEXT));
+
+		// elements.add(new ElementToValidate(By.id("returnAirport"),
+		// to.toUpperCase(), ValidationType.PARTIAL_TEXT));
+
+		return elements;
+	}
+
+	private String getFlightSearchURL() {
+		String basicURL = "https://www.travelocity.com/Flights-Search?trip=%s&leg1=from:%s,to:%s,departure:%s";
+		String url = String.format(basicURL, flightType, from, to, departureDate);
+		return url;
 	}
 }
