@@ -11,11 +11,17 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ValidatePage {
+	
+	private WebDriver webDriver;
+	
+	public ValidatePage(WebDriver webDriver){
+		this.webDriver = webDriver;
+	}
 
-	public boolean validElements(WebDriver webDriver, Set<ElementToValidate> elementsToValidate) {
+	public boolean validElements(Set<ElementToValidate> elementsToValidate) {
 		boolean validPage = true;
 		for (ElementToValidate element : elementsToValidate) {
-			if (!validateElement(webDriver, element)) {
+			if (!validateElement(element)) {
 				validPage = false;
 				break;
 			}
@@ -23,24 +29,24 @@ public class ValidatePage {
 		return validPage;
 	}
 
-	private boolean validateElement(WebDriver webDriver, ElementToValidate element) {
+	private boolean validateElement(ElementToValidate element) {
 		boolean valid = true;
 		for (ValidationType validation : element.validations()) {
 			switch (validation) {
 			case COMPLETE_TEXT:
-				valid = validateCompleteText(webDriver, element);
+				valid = validateCompleteText(element);
 				break;
 			case COMPLETE_URL:
-				valid = validateCompleteURL(webDriver, element);
+				valid = validateCompleteURL(element);
 				break;
 			case IS_ELEMENT_PRESENT:
-				valid = isElementPresent(webDriver, element.locator());
+				valid = isElementPresent(element.locator());
 				break;
 			case PARTIAL_TEXT:
-				valid = validatePartialText(webDriver, element);
+				valid = validatePartialText(element);
 				break;
 			case PARTIAL_URL:
-				valid = validatePartialURL(webDriver, element);
+				valid = validatePartialURL(element);
 				break;
 			default:
 				break;
@@ -54,46 +60,27 @@ public class ValidatePage {
 		return valid;
 	}
 
-	private boolean validateCompleteURL(WebDriver webDriver, ElementToValidate element) {
+	private boolean validateCompleteURL(ElementToValidate element) {
 		return webDriver.getCurrentUrl().equals(element.value());
 	}
 
-	private boolean validatePartialURL(WebDriver webDriver, ElementToValidate element) {
+	private boolean validatePartialURL(ElementToValidate element) {
 		return webDriver.getCurrentUrl().contains(element.value());
 	}
 
-	private boolean validateCompleteText(WebDriver webDriver, ElementToValidate element) {
+	private boolean validateCompleteText(ElementToValidate element) {
 		WebElement webEl = (new WebDriverWait(webDriver, 3)
 				.until(ExpectedConditions.presenceOfElementLocated(element.locator())));
 		return element.value() != null && element.value().equals(webEl.getText());
 	}
 
-	private boolean validatePartialText(WebDriver webDriver, ElementToValidate element) {
+	private boolean validatePartialText(ElementToValidate element) {
 		WebElement webEl = (new WebDriverWait(webDriver, 3)
 				.until(ExpectedConditions.presenceOfElementLocated(element.locator())));
 		return element.value() != null && webEl.getText().contains(element.value());
 	}
-	/*
-	 * public boolean validateByElementsPresent(By... locators) { boolean
-	 * validPage = true;
-	 * 
-	 * for (By locator : locators) { if (!isElementPresent(locator)) { validPage
-	 * = false; break; } }
-	 * 
-	 * return validPage; }
-	 * 
-	 * public boolean validateByElmentsAndValue(Map<String, By>
-	 * elementsAndValue) { boolean validPage = true;
-	 * 
-	 * for (String value : elementsAndValue.keySet()) { if
-	 * (isElementPresent(elementsAndValue.get(value))) { if
-	 * (!value.equals(webDriver.findElement(elementsAndValue.get(value)).getText
-	 * ())) { validPage = false; break; } } else { validPage = false; break; } }
-	 * 
-	 * return validPage; }
-	 */
 
-	private boolean isElementPresent(WebDriver webDriver, By locator) {
+	private boolean isElementPresent(By locator) {
 		try {
 			(new WebDriverWait(webDriver, 3)).until(ExpectedConditions.presenceOfElementLocated(locator));
 			return true;

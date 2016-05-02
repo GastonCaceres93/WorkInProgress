@@ -10,12 +10,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import gaston_caceres.training.globant.com.search.FlightSearch;
+import gaston_caceres.training.globant.com.bookings.stages.flight.FlightSelection;
 import gaston_caceres.training.globant.com.utils.CalendarElement;
-import gaston_caceres.training.globant.com.utils.ElementToValidate;
+import gaston_caceres.training.globant.com.utils.FlightInfo;
 import gaston_caceres.training.globant.com.utils.FlightsConnections;
-import gaston_caceres.training.globant.com.utils.ValidatePage;
-import gaston_caceres.training.globant.com.utils.ValidationType;
 
 public class FlightBooking {
 
@@ -44,11 +42,12 @@ public class FlightBooking {
 
 	private Set<FlightsConnections> connections;
 	private int connectionsCount = 2;
-	private String flightType;
-	private String from, to, departureDate;
+
+	private static FlightInfo flightInfo;
 
 	public FlightBooking(WebDriver webDriver) {
 		this.webDriver = webDriver;
+		flightInfo = new FlightInfo();
 		PageFactory.initElements(webDriver, this);
 	}
 
@@ -59,7 +58,7 @@ public class FlightBooking {
 
 	public FlightBooking oneWayTrip() {
 		oneWayTripTab.click();
-		this.flightType = "oneway";
+		flightInfo.setTripType("oneway");
 		return this;
 	}
 
@@ -71,50 +70,53 @@ public class FlightBooking {
 
 	public FlightBooking selectDepartureDate(DateTime date) {
 		webDriver.findElement(By.id("flight-departing")).click();
+
+		flightInfo.setDepartureDate(date);
+
 		new CalendarElement(webDriver).selectDate(date);
-		this.departureDate = webDriver.findElement(By.id("flight-departing")).getText();
 		return this;
 	}
 
 	public FlightBooking selectRetournDate(DateTime date) {
 		webDriver.findElement(By.id("flight-returning")).click();
+
+		flightInfo.setRetournDate(date);
+
 		new CalendarElement(webDriver).selectDate(date);
 		return this;
 	}
 
 	public FlightBooking adultsTraveling(int adults) {
 		this.adultsTraveling.sendKeys(String.valueOf(adults));
+		flightInfo.setAdults(adults);
 		return this;
 	}
 
 	public FlightBooking childrenTraveling(int children) {
 		this.childrenTraveling.sendKeys(String.valueOf(children));
+		flightInfo.setChildren(children);
 		return this;
 
 	}
 
-	public FlightBooking selectDestinationAirport(String destinationAirport) {
-		this.to = destinationAirport;
+	public FlightBooking selectArrivalAirport(String destinationAirport) {
 		this.toBox.sendKeys(destinationAirport);
+		flightInfo.setDestinationAirport(destinationAirport);
 		return this;
 
 	}
 
 	public FlightBooking selectDepartureAirport(String departureAirport) {
-		this.from = departureAirport;
 		this.fromBox.sendKeys(departureAirport);
+		flightInfo.setDepartureAirport(departureAirport);
 		return this;
 	}
 
-	public FlightSearch searchFlights() {
+	public FlightSelection searchFlights() {
 		webDriver.findElement(By.id("search-button")).click();
-		FlightSearch flightSearch = new FlightSearch(webDriver);
+		FlightSelection flightSelection = new FlightSelection(webDriver);
 
-		return flightSearch;
-	}
-
-	public boolean validatePage() {
-		return new ValidatePage().validElements(webDriver,getElementsToValidate());
+		return flightSelection;
 	}
 
 	public FlightBooking addConnection(String from, String to, DateTime departure) {
@@ -124,31 +126,7 @@ public class FlightBooking {
 		return this;
 	}
 
-	private Set<ElementToValidate> getElementsToValidate() {
-		Set<ElementToValidate> elements = new HashSet<ElementToValidate>();
-
-		elements.add(new ElementToValidate(By.xpath(".//*[@Id='columnAFilter']/h3"), "Filter your results by",
-				ValidationType.IS_ELEMENT_PRESENT, ValidationType.COMPLETE_TEXT));
-
-		elements.add(new ElementToValidate(null, getFlightSearchURL(), ValidationType.PARTIAL_URL));
-
-		elements.add(new ElementToValidate(By.id("wizardSearch"), null, ValidationType.IS_ELEMENT_PRESENT));
-
-		elements.add(new ElementToValidate(By.id("flightModuleLisdt"), null, ValidationType.IS_ELEMENT_PRESENT));
-		
-		
-		// elements.add(new ElementToValidate(By.id("departureAirport"),
-		// from.toUpperCase(), ValidationType.PARTIAL_TEXT));
-
-		// elements.add(new ElementToValidate(By.id("returnAirport"),
-		// to.toUpperCase(), ValidationType.PARTIAL_TEXT));
-
-		return elements;
-	}
-
-	private String getFlightSearchURL() {
-		String basicURL = "https://www.travelocity.com/Flights-Search?trip=%s&leg1=from:%s,to:%s,departure:%s";
-		String url = String.format(basicURL, flightType, from, to, departureDate);
-		return url;
+	public static FlightInfo getFlightInfo() {
+		return flightInfo;
 	}
 }

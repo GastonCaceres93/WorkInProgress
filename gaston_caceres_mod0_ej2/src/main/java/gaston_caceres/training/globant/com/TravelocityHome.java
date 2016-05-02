@@ -33,7 +33,7 @@ public class TravelocityHome {
 
 	@FindBy(id = "tab-cruise-tab")
 	private WebElement cruisesLink;
-
+	
 	public TravelocityHome(WebDriver webDriver) {
 		this.webDriver = webDriver;
 	}
@@ -63,4 +63,13 @@ public class TravelocityHome {
 		cruisesLink.click();
 		return new CruisesBooking(webDriver);
 	}
+
+	public void quit() {
+		this.webDriver.quit();
+	}
+
+	public WebDriver getDriver() {
+		return this.webDriver;
+	}
+	
 }
