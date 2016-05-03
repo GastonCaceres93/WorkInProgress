@@ -47,30 +47,23 @@ public class PackageBooking {
 		PageFactory.initElements(webDriver, this);
 	}
 
-	private void init() {
-	}
-
 	public PackageBooking bookFlightPlusHotel() {
 		webDriver.findElement(By.id("package-fh-label")).click();
-		init();
 		return this;
 	}
 
 	public PackageBooking bookFlightPlusHotelAndCar() {
 		webDriver.findElement(By.id("package-fhc-label")).click();
-		init();
 		return this;
 	}
 
 	public PackageBooking bookFlightPlusCar() {
 		webDriver.findElement(By.id("package-fc-label")).click();
-		init();
 		return this;
 	}
 
 	public PackageBooking bookHotelPlusCar() {
 		webDriver.findElement(By.id("package-hc-label")).click();
-		init();
 		return this;
 	}
 
@@ -81,7 +74,6 @@ public class PackageBooking {
 	}
 
 	public PackageBooking selectDepartureDate(DateTime date) {
-//		webDriver.findElement(By.id("flight-departing")).click();
 		departureDate.click();
 		packageInfo.setDepartureDate(date);
 		new CalendarElement(webDriver).selectDate(date);
@@ -89,7 +81,6 @@ public class PackageBooking {
 	}
 
 	public PackageBooking selectRetournDate(DateTime date) {
-//		webDriver.findElement(By.id("flight-returning")).click();
 		retournDate.click();
 		packageInfo.setRetournDate(date);
 		new CalendarElement(webDriver).selectDate(date);
