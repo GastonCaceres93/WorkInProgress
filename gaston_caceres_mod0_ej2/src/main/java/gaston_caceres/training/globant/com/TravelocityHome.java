@@ -33,13 +33,16 @@ public class TravelocityHome {
 
 	@FindBy(id = "tab-cruise-tab")
 	private WebElement cruisesLink;
-	
+
+	private String mainHandle;
+
 	public TravelocityHome(WebDriver webDriver) {
 		this.webDriver = webDriver;
 	}
 
 	public TravelocityHome goHome() {
 		this.webDriver.get(TRAVELOCITY_HOME_URL);
+		this.mainHandle = webDriver.getWindowHandle();
 		PageFactory.initElements(webDriver, this);
 		return this;
 	}
@@ -71,5 +74,14 @@ public class TravelocityHome {
 	public WebDriver getDriver() {
 		return this.webDriver;
 	}
-	
+
+	public void closeOtherHandles() {
+		for (String handle : webDriver.getWindowHandles()) {
+			if (!handle.equals(mainHandle)) {
+				webDriver.switchTo().window(handle).close();
+			}
+		}
+		webDriver.switchTo().window(mainHandle);
+	}
+
 }

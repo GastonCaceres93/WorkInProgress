@@ -73,6 +73,10 @@ public class FlightInfo {
 	public void setPrice(float price) {
 		this.price = price;
 	}
+	
+	public String getPriceAsText(){
+		return "$".concat(String.valueOf(price));
+	}
 
 	public int getAdults() {
 		return adults;

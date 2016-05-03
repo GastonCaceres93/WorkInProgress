@@ -11,10 +11,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class ValidatePage {
-	
+
 	private WebDriver webDriver;
-	
-	public ValidatePage(WebDriver webDriver){
+
+	public ValidatePage(WebDriver webDriver) {
 		this.webDriver = webDriver;
 	}
 
@@ -22,6 +22,7 @@ public class ValidatePage {
 		boolean validPage = true;
 		for (ElementToValidate element : elementsToValidate) {
 			if (!validateElement(element)) {
+				System.out.println(element.locator());
 				validPage = false;
 				break;
 			}
@@ -69,15 +70,23 @@ public class ValidatePage {
 	}
 
 	private boolean validateCompleteText(ElementToValidate element) {
-		WebElement webEl = (new WebDriverWait(webDriver, 3)
-				.until(ExpectedConditions.presenceOfElementLocated(element.locator())));
-		return element.value() != null && element.value().equals(webEl.getText());
+		try {
+			WebElement webEl = (new WebDriverWait(webDriver, 3)
+					.until(ExpectedConditions.presenceOfElementLocated(element.locator())));
+			return element.value() != null && element.value().equalsIgnoreCase(webEl.getText());
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	private boolean validatePartialText(ElementToValidate element) {
-		WebElement webEl = (new WebDriverWait(webDriver, 3)
-				.until(ExpectedConditions.presenceOfElementLocated(element.locator())));
-		return element.value() != null && webEl.getText().contains(element.value());
+		try {
+			WebElement webEl = (new WebDriverWait(webDriver, 3)
+					.until(ExpectedConditions.presenceOfElementLocated(element.locator())));
+			return element.value() != null && webEl.getText().contains(element.value());
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	private boolean isElementPresent(By locator) {
@@ -86,7 +95,7 @@ public class ValidatePage {
 			return true;
 		} catch (NoSuchElementException e) {
 			return false;
-		}catch (TimeoutException e) {
+		} catch (TimeoutException e) {
 			return false;
 		}
 	}

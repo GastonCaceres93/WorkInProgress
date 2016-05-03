@@ -10,6 +10,7 @@ import gaston_caceres.training.globant.com.TravelocityHome;
 import gaston_caceres.training.globant.com.bookings.FlightBooking;
 import gaston_caceres.training.globant.com.bookings.stages.flight.FlightReview;
 import gaston_caceres.training.globant.com.bookings.stages.flight.FlightSelection;
+import gaston_caceres.training.globant.com.bookings.stages.flight.WhoIsTraveling;
 import gaston_caceres.training.globant.com.utils.FlightInfo;
 import gaston_caceres.training.globant.com.utils.FlightSort;
 import gaston_caceres.training.globant.com.utils.ValidatePage;
@@ -44,20 +45,19 @@ public class ExerciseTwoTests {
 
 		FlightSelection flightSelection = flight.searchFlights();
 
-		// validate correct page
-		ValidatePage pageValidation = new  ValidatePage(travelocityHome.getDriver());
-		assert(pageValidation.validElements(flightSelection.getElementsToValidateFlightSelectionPage()));
-		
-		
-		flightSelection.sortFlights(FlightSort.DURATION_SHORTEST);
+		travelocityHome.closeOtherHandles();
 
-		// validate sort
-		assert(flightSelection.validateSort());
-		
+		ValidatePage pageValidation = new ValidatePage(travelocityHome.getDriver());
+		assert (pageValidation.validElements(flightSelection.getElementsToValidateFlightSelectionPage()));
+
+		flightSelection.sortFlights(FlightSort.DURATION_SHORTEST);
+		assert (flightSelection.validateSort());
+
 		FlightReview flightReview = flightSelection.selectFlight(1);
 
 		/**
-		 *no estoy seguro en que pagina se realizarian las siguientes acciones, quizas el examen esta desactualizado.<br>
+		 * no estoy seguro en que pagina se realizarian las siguientes acciones,
+		 * quizas el examen esta desactualizado.<br>
 		 * 5.In the new page (Select your departure to Los Angeles), select the
 		 * first result.<br>
 		 * 6. In the new page (Select your departure to Las Vegas), select the
@@ -65,19 +65,17 @@ public class ExerciseTwoTests {
 		 * 7.In the pop-up, select “no, thanks, maybe later”
 		 */
 
-		// validate trip details
-		//Verify the trip information is correct using 5 validations. Continue
-		FlightInfo flightInfo = flight.getFlightInfo();
-		assert(pageValidation.validElements(flightReview.getElementsToValidateFlightReviewPage(flightInfo)));
-		
-		flightReview.continueBooking();
-		//Verify the “Who’s travelling” page is opened using at least 5 validations.
+		FlightInfo flightInfo = FlightBooking.getFlightInfo();
 
+		assert (pageValidation.validElements(flightReview.getElementsToValidateFlightReviewPage(flightInfo)));
+
+		WhoIsTraveling whoIsTraveling = flightReview.continueBooking();
+		assert (pageValidation.validElements(whoIsTraveling.getElementsToValidateFlightReviewPage()));
 	}
-	
+
 	@AfterClass
-	public void after(){
-		this.travelocityHome.quit();
+	public void after() {
+		 this.travelocityHome.quit();
 	}
 
 }

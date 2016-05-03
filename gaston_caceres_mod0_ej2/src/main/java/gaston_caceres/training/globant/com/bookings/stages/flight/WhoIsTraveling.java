@@ -20,14 +20,15 @@ public class WhoIsTraveling {
 	public Set<ElementToValidate> getElementsToValidateFlightReviewPage() {
 		Set<ElementToValidate> elements = new HashSet<ElementToValidate>();
 
-		elements.add(
-				new ElementToValidate(By.id("FlightUDPTripMetaArrivalCity"), null, ValidationType.IS_ELEMENT_PRESENT));
+		elements.add(new ElementToValidate(By.xpath(".//*[@id='preferences']/form/fieldset/h2"), "Who's traveling?", ValidationType.COMPLETE_TEXT));
 
-		elements.add(new ElementToValidate(By.id("FlightUDPBookNowButton1"), null, ValidationType.IS_ELEMENT_PRESENT));
+		elements.add(new ElementToValidate(By.id("cko-form"), null, ValidationType.IS_ELEMENT_PRESENT));
 
-		elements.add(new ElementToValidate(By.id("trip-summary-title"), null, ValidationType.IS_ELEMENT_PRESENT));
+		elements.add(new ElementToValidate(By.id("trip-summary"), null, ValidationType.IS_ELEMENT_PRESENT));
 
-		elements.add(new ElementToValidate(null, "https://www.travelocity.com/Details", ValidationType.PARTIAL_URL));
+		elements.add(new ElementToValidate(By.id("login-module-toggle"), null, ValidationType.IS_ELEMENT_PRESENT));
+		
+		elements.add(new ElementToValidate(null, "https://www.travelocity.com/FlightCheckout", ValidationType.PARTIAL_URL));
 
 		return elements;
 	}

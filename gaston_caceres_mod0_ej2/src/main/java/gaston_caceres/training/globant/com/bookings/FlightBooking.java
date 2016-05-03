@@ -115,7 +115,6 @@ public class FlightBooking {
 	public FlightSelection searchFlights() {
 		webDriver.findElement(By.id("search-button")).click();
 		FlightSelection flightSelection = new FlightSelection(webDriver);
-
 		return flightSelection;
 	}
 
