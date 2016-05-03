@@ -2,24 +2,26 @@ package gaston_caceres.training.globant.com.tests;
 
 import org.joda.time.DateTime;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import gaston_caceres.training.globant.com.TravelocityHome;
-import gaston_caceres.training.globant.com.bookings.FlightBooking;
-import gaston_caceres.training.globant.com.bookings.stages.flight.FlightReview;
-import gaston_caceres.training.globant.com.bookings.stages.flight.FlightSelection;
-import gaston_caceres.training.globant.com.bookings.stages.flight.WhoIsTraveling;
-import gaston_caceres.training.globant.com.utils.FlightInfo;
-import gaston_caceres.training.globant.com.utils.FlightSort;
+import gaston_caceres.training.globant.com.bookings.flight.FlightBooking;
+import gaston_caceres.training.globant.com.bookings.flight.FlightInfo;
+import gaston_caceres.training.globant.com.bookings.flight.FlightReview;
+import gaston_caceres.training.globant.com.bookings.flight.FlightSelection;
+import gaston_caceres.training.globant.com.bookings.flight.FlightSort;
+import gaston_caceres.training.globant.com.bookings.flight.WhoIsTraveling;
+import gaston_caceres.training.globant.com.bookings.packageBooking.PackageBooking;
+import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.HotelSort;
 import gaston_caceres.training.globant.com.utils.ValidatePage;
 
 public class ExerciseTwoTests {
 
 	private TravelocityHome travelocityHome;
 
-	@BeforeClass
+	@BeforeTest
 	public void before() {
 		this.travelocityHome = new TravelocityHome(new FirefoxDriver());
 	}
@@ -73,9 +75,42 @@ public class ExerciseTwoTests {
 		assert (pageValidation.validElements(whoIsTraveling.getElementsToValidateFlightReviewPage()));
 	}
 
-	@AfterClass
+	@Test
+	public void test_02() {
+
+		long seventy_days = 6048000000L;
+		long thirteen_days = 1123200000L;
+		DateTime departureDate = new DateTime(System.currentTimeMillis() + seventy_days);
+		DateTime retournDate = new DateTime(departureDate.getMillis() + thirteen_days);
+		String departureAirport = "LAS";
+		String arrivalAirport = "LAX";
+		int adults = 1;
+		int children = 0;
+		int rooms = 1;
+
+		PackageBooking packageBooking = travelocityHome.goHome().goFlightAndHotel();
+		ValidatePage pageValidation = new ValidatePage(travelocityHome.getDriver());
+		
+		packageBooking.selectDepartureAirport(departureAirport);
+		packageBooking.selectArrivalAirport(arrivalAirport);
+		packageBooking.selectDepartureDate(departureDate);
+		packageBooking.selectRetournDate(retournDate);
+
+		packageBooking.childrenTraveling(children);
+		packageBooking.adultsTraveling(adults);
+		packageBooking.rooms(rooms);
+		
+		packageBooking.search();
+		
+		packageBooking.hotel().sort(HotelSort.BY_PRICE);
+		
+		assert(pageValidation.validElements(packageBooking.hotel().getElementsToValidateSort()));
+
+	}
+
+	@AfterTest
 	public void after() {
-		 this.travelocityHome.quit();
+		this.travelocityHome.quit();
 	}
 
 }

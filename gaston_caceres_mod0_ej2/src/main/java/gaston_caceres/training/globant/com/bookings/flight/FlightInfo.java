@@ -1,4 +1,4 @@
-package gaston_caceres.training.globant.com.utils;
+package gaston_caceres.training.globant.com.bookings.flight;
 
 import org.joda.time.DateTime;
 

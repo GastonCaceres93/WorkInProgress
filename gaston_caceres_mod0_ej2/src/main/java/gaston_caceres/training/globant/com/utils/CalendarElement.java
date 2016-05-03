@@ -9,6 +9,8 @@ import org.joda.time.DateTime;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class CalendarElement {
 
@@ -81,9 +83,18 @@ public class CalendarElement {
 	}
 
 	private void initCalendars() {
-		WebElement calendarsDivContainer = webDriver.findElement(By.cssSelector(".cal"));
+		WebElement calendarsDivContainer = findCalendarContainer();
 		calendarOne = calendarsDivContainer.findElement(By.xpath("section[1]"));
 		calendarTwo = calendarsDivContainer.findElement(By.xpath("section[2]"));
+	}
+	
+	private WebElement findCalendarContainer(){
+		try {
+			//aparentement siempre lo encuentra con .cal ....
+			return (new WebDriverWait(webDriver, 2)).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".cal")));
+		} catch (Exception e) {
+			return (new WebDriverWait(webDriver, 2)).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".cal.show-second-month")));
+		}
 	}
 
 }

@@ -1,9 +1,11 @@
-package gaston_caceres.training.globant.com.utils;
+package gaston_caceres.training.globant.com.bookings.flight;
 
 import org.joda.time.DateTime;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import gaston_caceres.training.globant.com.utils.CalendarElement;
 
 public class FlightsConnections {
 

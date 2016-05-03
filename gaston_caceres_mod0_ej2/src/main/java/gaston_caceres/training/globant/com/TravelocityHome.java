@@ -6,19 +6,13 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import gaston_caceres.training.globant.com.bookings.CruisesBooking;
-import gaston_caceres.training.globant.com.bookings.FlightAndHotelBooking;
-import gaston_caceres.training.globant.com.bookings.FlightBooking;
+import gaston_caceres.training.globant.com.bookings.flight.FlightBooking;
+import gaston_caceres.training.globant.com.bookings.packageBooking.PackageBooking;
 import gaston_caceres.training.globant.com.bookings.HotelBooking;
 
 public class TravelocityHome {
 
 	private static final String TRAVELOCITY_HOME_URL = "https://www.travelocity.com/";
-	// private static final String TRAVELOCITY_FLIGHTS_URL =
-	// "https://www.travelocity.com/Flights";
-	// private static final String TRAVELOCITY_HOTELS_URL =
-	// "https://www.travelocity.com/Hotels";
-	// private static final String TRAVELOCITY_CRUISES_URL =
-	// "https://www.travelocity.com/Cruises";
 
 	private WebDriver webDriver;
 
@@ -47,9 +41,9 @@ public class TravelocityHome {
 		return this;
 	}
 
-	public FlightAndHotelBooking goFlightAndHotel() {
+	public PackageBooking goFlightAndHotel() {
 		this.flightPlusHotelLink.click();
-		return new FlightAndHotelBooking(webDriver);
+		return new PackageBooking(webDriver);
 	}
 
 	public FlightBooking goFlight() {

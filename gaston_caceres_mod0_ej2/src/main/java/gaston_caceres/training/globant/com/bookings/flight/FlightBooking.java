@@ -1,4 +1,4 @@
-package gaston_caceres.training.globant.com.bookings;
+package gaston_caceres.training.globant.com.bookings.flight;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,10 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import gaston_caceres.training.globant.com.bookings.stages.flight.FlightSelection;
 import gaston_caceres.training.globant.com.utils.CalendarElement;
-import gaston_caceres.training.globant.com.utils.FlightInfo;
-import gaston_caceres.training.globant.com.utils.FlightsConnections;
 
 public class FlightBooking {
 

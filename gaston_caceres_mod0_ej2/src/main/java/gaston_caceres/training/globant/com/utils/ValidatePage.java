@@ -49,6 +49,9 @@ public class ValidatePage {
 			case PARTIAL_URL:
 				valid = validatePartialURL(element);
 				break;
+			case ATTRIBUTE:
+				valid = validateAttribute(element);
+				break;
 			default:
 				break;
 			}
@@ -98,6 +101,17 @@ public class ValidatePage {
 		} catch (TimeoutException e) {
 			return false;
 		}
+	}
+
+	private boolean validateAttribute(ElementToValidate element) {
+		boolean valid = true;
+		if (isElementPresent(element.locator())) {
+			WebElement webEl = (new WebDriverWait(webDriver, 3).until(ExpectedConditions.presenceOfElementLocated(element.locator())));
+			valid = webEl.getAttribute(element.getAttribute()).equals(element.value());
+		} else {
+			valid = false;
+		}
+		return valid;
 	}
 
 }

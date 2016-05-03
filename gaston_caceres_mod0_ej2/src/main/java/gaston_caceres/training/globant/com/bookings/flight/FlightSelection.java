@@ -1,4 +1,4 @@
-package gaston_caceres.training.globant.com.bookings.stages.flight;
+package gaston_caceres.training.globant.com.bookings.flight;
 
 import java.util.HashSet;
 import java.util.List;
@@ -11,9 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import gaston_caceres.training.globant.com.bookings.FlightBooking;
 import gaston_caceres.training.globant.com.utils.ElementToValidate;
-import gaston_caceres.training.globant.com.utils.FlightSort;
 import gaston_caceres.training.globant.com.utils.ValidationType;
 
 public class FlightSelection {
@@ -207,17 +205,17 @@ public class FlightSelection {
 	public Set<ElementToValidate> getElementsToValidateFlightSelectionPage() {
 		Set<ElementToValidate> elements = new HashSet<ElementToValidate>();
 
-		elements.add(new ElementToValidate(By.xpath(".//*[@Id='columnAFilter']/h3"), "Filter your results by",
+		elements.add(new ElementToValidate(By.xpath(".//*[@Id='columnAFilter']/h3"),null, "Filter your results by",
 				ValidationType.IS_ELEMENT_PRESENT, ValidationType.COMPLETE_TEXT));
 
 		elements.add(
-				new ElementToValidate(null, "ttps://www.travelocity.com/Flights-Search?", ValidationType.PARTIAL_URL));
+				new ElementToValidate(null,null, "ttps://www.travelocity.com/Flights-Search?", ValidationType.PARTIAL_URL));
 
-		elements.add(new ElementToValidate(By.id("wizardSearch"), null, ValidationType.IS_ELEMENT_PRESENT));
+		elements.add(new ElementToValidate(By.id("wizardSearch"),null,null, ValidationType.IS_ELEMENT_PRESENT));
 
-		elements.add(new ElementToValidate(By.id("flightModuleList"), null, ValidationType.IS_ELEMENT_PRESENT));
+		elements.add(new ElementToValidate(By.id("flightModuleList"),null, null, ValidationType.IS_ELEMENT_PRESENT));
 
-		elements.add(new ElementToValidate(By.id("departureAirport"), null, ValidationType.IS_ELEMENT_PRESENT));
+		elements.add(new ElementToValidate(By.id("departureAirport"),null, null, ValidationType.IS_ELEMENT_PRESENT));
 
 		return elements;
 	}
