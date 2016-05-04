@@ -47,12 +47,23 @@ public class PackageFlight {
 	
 	private boolean flightsListReady() {
 		return (new WebDriverWait(webDriver, 10)).until(
-				ExpectedConditions.and(ExpectedConditions.presenceOfElementLocated(By.id("packageSearchResults")),
-						ExpectedConditions.invisibilityOfElementLocated(By.id("divInterstitial"))));
+				ExpectedConditions.and(ExpectedConditions.presenceOfElementLocated(By.id("resultList")),
+						ExpectedConditions.invisibilityOfElementLocated(By.id("resultsInterstitial")),
+						ExpectedConditions.visibilityOfAllElementsLocatedBy(By.id("resultList"))));
 	}
 	
 	private void loadFlights(){
-		
+		if(flightsListReady()){
+			flights = webDriver.findElements(By.xpath(".//*[@Id='resultList']/div"));
+		}
+	}
+	//
+	
+	public PackageFlight selectFlight(int flighPosition){
+		for(WebElement flight : flights){
+			flight.findElement(By.xpath("")).click();
+		}
+		return this;
 	}
 
 }
