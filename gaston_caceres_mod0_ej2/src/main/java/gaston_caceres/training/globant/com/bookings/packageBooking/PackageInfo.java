@@ -2,6 +2,9 @@ package gaston_caceres.training.globant.com.bookings.packageBooking;
 
 import org.joda.time.DateTime;
 
+import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.HotelInfo;
+import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.HotelStars;
+
 public class PackageInfo {
 
 	private String departureAirport;
@@ -13,8 +16,7 @@ public class PackageInfo {
 	private int children;
 	private int adults;
 
-	private String hotelName;
-	private int hotelStars;
+	private HotelInfo hotel;
 	private int rooms;
 
 	private String carModel;
@@ -70,28 +72,12 @@ public class PackageInfo {
 		this.adults = adults;
 	}
 
-	public String getHotelName() {
-		return hotelName;
+	public void setHotel(HotelInfo hotelInfo) {
+		hotel = hotelInfo;
 	}
 
-	public void setHotelName(String hotelName) {
-		this.hotelName = hotelName;
-	}
-
-	public int getHotelStars() {
-		return hotelStars;
-	}
-
-	public void setHotelStars(int hotelStars) {
-		this.hotelStars = hotelStars;
-	}
-
-	public int getRooms() {
-		return rooms;
-	}
-
-	public void setRooms(int rooms) {
-		this.rooms = rooms;
+	public HotelInfo getHotel() {
+		return hotel;
 	}
 
 	public String getCarModel() {
@@ -116,6 +102,14 @@ public class PackageInfo {
 
 	public String getPackageType() {
 		return this.packageType;
+	}
+
+	public void setRooms(int rooms) {
+		this.rooms = rooms;
+	}
+
+	public int getRooms() {
+		return rooms;
 	}
 
 }

@@ -41,6 +41,8 @@ public class PackageBooking {
 	private PackageHotel hotel;
 	private PackageFlight flight;
 
+	private static String currentHandle;
+
 	public PackageBooking(WebDriver webDriver) {
 		this.webDriver = webDriver;
 		packageInfo = new PackageInfo();
@@ -68,8 +70,11 @@ public class PackageBooking {
 	}
 
 	public PackageBooking search() {
+		currentHandle = webDriver.getWindowHandle();
+
 		webDriver.findElement(By.id("search-button")).click();
-		this.hotel = new PackageHotel(this.webDriver);
+		
+		closeOtherWindows(currentHandle);
 		return this;
 	}
 
@@ -124,11 +129,40 @@ public class PackageBooking {
 	}
 
 	public PackageHotel hotel() {
+		if (hotel == null) {
+			hotel = new PackageHotel(webDriver);
+		}
 		return this.hotel;
 	}
 
+	public PackageBooking selectFirstRoom() {
+		hotel.selectFirstRoomAvailable();
+		return this;
+	}
+
 	public PackageFlight flight() {
-		return this.flight;
+		if (flight == null) {
+			flight = new PackageFlight(webDriver);
+		}
+		return flight;
+	}
+
+	private void closeOtherWindows(String keepHandle) {
+		for (String handle : webDriver.getWindowHandles()) {
+			if (keepHandle != null && !keepHandle.equals(handle)) {
+				webDriver.switchTo().window(handle);
+				webDriver.close();
+			}
+		}
+		webDriver.switchTo().window(keepHandle);
+	}
+
+	public static String currentHandle() {
+		return currentHandle;
+	}
+
+	public static void updateCurrentHandle(String newHandle) {
+		currentHandle = newHandle;
 	}
 
 }

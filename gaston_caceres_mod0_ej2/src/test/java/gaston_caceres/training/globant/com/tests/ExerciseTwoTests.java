@@ -2,7 +2,9 @@ package gaston_caceres.training.globant.com.tests;
 
 import org.joda.time.DateTime;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -15,18 +17,19 @@ import gaston_caceres.training.globant.com.bookings.flight.FlightSort;
 import gaston_caceres.training.globant.com.bookings.flight.WhoIsTraveling;
 import gaston_caceres.training.globant.com.bookings.packageBooking.PackageBooking;
 import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.HotelSort;
+import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.HotelStars;
 import gaston_caceres.training.globant.com.utils.ValidatePage;
 
 public class ExerciseTwoTests {
 
 	private TravelocityHome travelocityHome;
 
-	@BeforeTest
+	@BeforeMethod
 	public void before() {
-		this.travelocityHome = new TravelocityHome(new FirefoxDriver());
+		travelocityHome = new TravelocityHome(new FirefoxDriver());
 	}
 
-	@Test
+//	 @Test
 	public void test_01() {
 
 		long seventy_days_from_now = 6048000000L;
@@ -39,10 +42,10 @@ public class ExerciseTwoTests {
 		FlightBooking flight = this.travelocityHome.goHome().goFlight();
 
 		flight.oneWayTrip();
-		flight.selectArrivalAirport(arrivalAirport);
 		flight.selectDepartureAirport(departureAirport);
-		flight.selectDepartureDate(departureDate);
+		flight.selectArrivalAirport(arrivalAirport);
 		flight.adultsTraveling(adults);
+		flight.selectDepartureDate(departureDate);
 		flight.childrenTraveling(children);
 
 		FlightSelection flightSelection = flight.searchFlights();
@@ -90,7 +93,8 @@ public class ExerciseTwoTests {
 
 		PackageBooking packageBooking = travelocityHome.goHome().goFlightAndHotel();
 		ValidatePage pageValidation = new ValidatePage(travelocityHome.getDriver());
-		
+
+	
 		packageBooking.selectDepartureAirport(departureAirport);
 		packageBooking.selectArrivalAirport(arrivalAirport);
 		packageBooking.selectDepartureDate(departureDate);
@@ -99,18 +103,26 @@ public class ExerciseTwoTests {
 		packageBooking.childrenTraveling(children);
 		packageBooking.adultsTraveling(adults);
 		packageBooking.rooms(rooms);
-		
+
+		//hotel and room
 		packageBooking.search();
-		
 		packageBooking.hotel().sort(HotelSort.BY_PRICE);
+		assert (pageValidation.validElements(packageBooking.hotel().getElementsToValidateSort()));
+		packageBooking.hotel().selectHotelBy(HotelStars.TWO_AND_HALF);
+		packageBooking.hotel().continueBooking();
+		packageBooking.hotel().selectFirstRoomAvailable();
 		
-		assert(pageValidation.validElements(packageBooking.hotel().getElementsToValidateSort()));
+		
+		//flight
+		packageBooking.flight();
+		
+		
 
 	}
 
-	@AfterTest
+	@AfterMethod
 	public void after() {
-		this.travelocityHome.quit();
+//		this.travelocityHome.quit();
 	}
 
 }
