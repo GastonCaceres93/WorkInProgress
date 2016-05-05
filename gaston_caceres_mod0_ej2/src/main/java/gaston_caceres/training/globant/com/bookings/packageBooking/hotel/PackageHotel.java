@@ -27,7 +27,7 @@ public class PackageHotel {
 	private HotelInfo hotel;
 
 	private boolean hotelBookingReady;
-	
+
 	public PackageHotel(WebDriver webDriver) {
 		this.webDriver = webDriver;
 		hotel = new HotelInfo();
@@ -64,7 +64,7 @@ public class PackageHotel {
 	public PackageHotel selectHotelBy(HotelStars hotelStars) {
 		hotelSelected = null;
 		HotelStars hotelS = null;
-		while (hotelSelected == null) {
+		while (!foundHotel()) {
 			for (WebElement hotel : hotels) {
 				hotelS = getHotelStars(hotel);
 				if (hotelStars.equals(hotelS) || hotelS.ordinal() > hotelStars.ordinal()) {
@@ -73,11 +73,16 @@ public class PackageHotel {
 					break;
 				}
 			}
-			// TODO buscar otra forma
-			if (hotelSelected == null)
-				nextPageHotels();
 		}
 		return this;
+	}
+
+	private boolean foundHotel() {
+		if (hotelSelected == null) {
+			nextPageHotels();
+			return false;
+		}
+		return true;
 	}
 
 	private HotelStars getHotelStars(WebElement hotel) {
@@ -122,7 +127,7 @@ public class PackageHotel {
 
 	public PackageHotel selectFirstRoomAvailable() {
 		changeToRoomWindow();
-		
+
 		WebElement roomsContainer = (new WebDriverWait(webDriver, 10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.id("rooms-and-rates")));
 		List<WebElement> rooms = roomsContainer
@@ -150,12 +155,12 @@ public class PackageHotel {
 	public HotelInfo getHotelInfo() {
 		return hotel;
 	}
-	
-	private void changeToRoomWindow(){
-		for(String handle : webDriver.getWindowHandles()){
-			if(!handle.equals(PackageBooking.currentHandle())){
+
+	private void changeToRoomWindow() {
+		for (String handle : webDriver.getWindowHandles()) {
+			if (!handle.equals(PackageBooking.currentHandle())) {
 				PackageBooking.updateCurrentHandle(handle);
-			}else{
+			} else {
 				webDriver.switchTo().window(handle).close();
 			}
 		}

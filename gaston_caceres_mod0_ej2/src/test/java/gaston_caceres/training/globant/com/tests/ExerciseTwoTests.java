@@ -3,9 +3,7 @@ package gaston_caceres.training.globant.com.tests;
 import org.joda.time.DateTime;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import gaston_caceres.training.globant.com.TravelocityHome;
@@ -29,7 +27,7 @@ public class ExerciseTwoTests {
 		travelocityHome = new TravelocityHome(new FirefoxDriver());
 	}
 
-//	 @Test
+	@Test
 	public void test_01() {
 
 		long seventy_days_from_now = 6048000000L;
