@@ -3,7 +3,6 @@ package gaston_caceres.training.globant.com.bookings.packageBooking;
 import org.joda.time.DateTime;
 
 import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.HotelInfo;
-import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.HotelStars;
 
 public class PackageInfo {
 

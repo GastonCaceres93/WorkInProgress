@@ -103,6 +103,17 @@ public class PackageHotel {
 		return price;
 	}
 
+	private String getHotelTelephone(WebElement hotelRaw) {
+		String telephone = hotelRaw.findElement(By.cssSelector(".telesales-number")).getText();
+		return telephone;
+	}
+
+	private Integer getHotelUserReviews(WebElement hotelRaw) {
+		String userReviews = hotelRaw.findElement(By.cssSelector(".superlative-reviews")).findElement(By.tagName("a"))
+				.getText();
+		return Integer.valueOf(userReviews.split(" ")[0]);
+	}
+
 	private boolean hotelListReady() {
 		return (new WebDriverWait(webDriver, 10)).until(
 				ExpectedConditions.and(ExpectedConditions.presenceOfElementLocated(By.id("packageSearchResults")),
@@ -126,8 +137,6 @@ public class PackageHotel {
 	}
 
 	public PackageHotel selectFirstRoomAvailable() {
-		changeToRoomWindow();
-
 		WebElement roomsContainer = (new WebDriverWait(webDriver, 10))
 				.until(ExpectedConditions.presenceOfElementLocated(By.id("rooms-and-rates")));
 		List<WebElement> rooms = roomsContainer
@@ -143,6 +152,7 @@ public class PackageHotel {
 	public PackageHotel continueBooking() {
 		updateHotelInfo();
 		hotelSelected.click();
+		changeToRoomWindow();
 		return this;
 	}
 
@@ -150,6 +160,8 @@ public class PackageHotel {
 		hotel.setName(getHotelName(hotelSelected));
 		hotel.setPrice(getHotelPrice(hotelSelected));
 		hotel.setStars(getHotelStars(hotelSelected));
+		// hotel.setTelephone(getHotelTelephone(hotelSelected));
+		// hotel.setUserReviews(getHotelUserReviews(hotelSelected));
 	}
 
 	public HotelInfo getHotelInfo() {
@@ -165,6 +177,31 @@ public class PackageHotel {
 			}
 		}
 		webDriver.switchTo().window(PackageBooking.currentHandle());
+	}
+
+	public Set<ElementToValidate> getElementsToValidateHotelSelected() {
+		Set<ElementToValidate> elements = new HashSet<ElementToValidate>();
+
+		elements.add(new ElementToValidate(By.id("hotel-name"), null, hotel.getName(),
+				ValidationType.IS_ELEMENT_PRESENT, ValidationType.COMPLETE_TEXT));
+
+		elements.add(new ElementToValidate(By.cssSelector(hotel.getStars().cssConfirmation()), null, null,
+				ValidationType.IS_ELEMENT_PRESENT));
+
+		elements.add(new ElementToValidate(By.cssSelector(".price.link-to-rooms"), null, hotel.getPrice(),
+				ValidationType.IS_ELEMENT_PRESENT, ValidationType.COMPLETE_TEXT));
+
+		return elements;
+	}
+
+	// five needed
+	public Set<ElementToValidate> getElementsToValidateHotelSearch() {
+		Set<ElementToValidate> elements = new HashSet<ElementToValidate>();
+
+		elements.add(new ElementToValidate(By.id("hotel-name"), null, hotel.getName(),
+				ValidationType.IS_ELEMENT_PRESENT, ValidationType.COMPLETE_TEXT));
+
+		return elements;
 	}
 
 }

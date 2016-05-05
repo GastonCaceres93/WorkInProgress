@@ -5,6 +5,8 @@ public class HotelInfo {
 	private String name;
 	private HotelStars stars;
 	private String price;
+	private String telephone;
+	private Integer userReviews;
 
 	public HotelInfo() {
 	}
@@ -31,6 +33,22 @@ public class HotelInfo {
 
 	public void setPrice(String hotelPrice) {
 		price = hotelPrice;
+	}
+
+	public String getTelephone() {
+		return telephone;
+	}
+
+	public void setTelephone(String hotelTelephone) {
+		telephone = hotelTelephone;
+	}
+
+	public Integer getUserReviews() {
+		return userReviews;
+	}
+
+	public void setUserReviews(Integer hotelUserReviews) {
+		userReviews = hotelUserReviews;
 	}
 
 }

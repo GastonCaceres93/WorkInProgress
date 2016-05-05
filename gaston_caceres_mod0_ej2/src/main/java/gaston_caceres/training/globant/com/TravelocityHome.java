@@ -41,7 +41,7 @@ public class TravelocityHome {
 		return this;
 	}
 
-	public PackageBooking goFlightAndHotel() {
+	public PackageBooking goPackageBooking() {
 		this.flightPlusHotelLink.click();
 		return new PackageBooking(webDriver);
 	}

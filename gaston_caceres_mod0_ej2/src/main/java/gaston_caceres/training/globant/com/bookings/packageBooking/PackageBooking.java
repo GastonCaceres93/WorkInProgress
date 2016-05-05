@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import gaston_caceres.training.globant.com.bookings.packageBooking.cars.PackageCar;
 import gaston_caceres.training.globant.com.bookings.packageBooking.flight.PackageFlight;
 import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.PackageHotel;
 import gaston_caceres.training.globant.com.utils.CalendarElement;
@@ -40,6 +41,7 @@ public class PackageBooking {
 
 	private PackageHotel hotel;
 	private PackageFlight flight;
+	private PackageCar car;
 
 	private static String currentHandle;
 
@@ -73,7 +75,7 @@ public class PackageBooking {
 		currentHandle = webDriver.getWindowHandle();
 
 		webDriver.findElement(By.id("search-button")).click();
-		
+
 		closeOtherWindows(currentHandle);
 		return this;
 	}
@@ -145,6 +147,13 @@ public class PackageBooking {
 			flight = new PackageFlight(webDriver);
 		}
 		return flight;
+	}
+
+	public PackageCar car() {
+		if (car == null) {
+			car = new PackageCar(webDriver);
+		}
+		return car;
 	}
 
 	private void closeOtherWindows(String keepHandle) {

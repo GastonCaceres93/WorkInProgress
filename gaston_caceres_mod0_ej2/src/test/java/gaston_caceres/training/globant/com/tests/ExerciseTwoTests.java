@@ -14,6 +14,7 @@ import gaston_caceres.training.globant.com.bookings.flight.FlightSelection;
 import gaston_caceres.training.globant.com.bookings.flight.FlightSort;
 import gaston_caceres.training.globant.com.bookings.flight.WhoIsTraveling;
 import gaston_caceres.training.globant.com.bookings.packageBooking.PackageBooking;
+import gaston_caceres.training.globant.com.bookings.packageBooking.cars.CarType;
 import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.HotelSort;
 import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.HotelStars;
 import gaston_caceres.training.globant.com.utils.ValidatePage;
@@ -27,7 +28,7 @@ public class ExerciseTwoTests {
 		travelocityHome = new TravelocityHome(new FirefoxDriver());
 	}
 
-	@Test
+//	@Test
 	public void test_01() {
 
 		long seventy_days_from_now = 6048000000L;
@@ -89,9 +90,8 @@ public class ExerciseTwoTests {
 		int children = 0;
 		int rooms = 1;
 
-		PackageBooking packageBooking = travelocityHome.goHome().goFlightAndHotel();
+		PackageBooking packageBooking = travelocityHome.goHome().goPackageBooking().bookFlightPlusHotelAndCar();
 		ValidatePage pageValidation = new ValidatePage(travelocityHome.getDriver());
-
 	
 		packageBooking.selectDepartureAirport(departureAirport);
 		packageBooking.selectArrivalAirport(arrivalAirport);
@@ -102,25 +102,40 @@ public class ExerciseTwoTests {
 		packageBooking.adultsTraveling(adults);
 		packageBooking.rooms(rooms);
 
-		//hotel and room
 		packageBooking.search();
+		//Verify results page using at least 5 validations.
+		
+		
+		//hotel and room
 		packageBooking.hotel().sort(HotelSort.BY_PRICE);
+
+		//Sort by price. Verify the results were correctly sorted.
 		assert (pageValidation.validElements(packageBooking.hotel().getElementsToValidateSort()));
-		packageBooking.hotel().selectHotelBy(HotelStars.TWO_AND_HALF);
+		
+		packageBooking.hotel().selectHotelBy(HotelStars.THREE);
 		packageBooking.hotel().continueBooking();
+		
+		//In the new page, verify the hotel is the selected in the previous step using at least 3 validations.
+		assert(pageValidation.validElements(packageBooking.hotel().getElementsToValidateHotelSelected()));
+		
 		packageBooking.hotel().selectFirstRoomAvailable();
 		
 		
 		//flight
-		packageBooking.flight();
+		packageBooking.flight().selectDepartureFlight(1);
+		packageBooking.flight().selectRetournFlight(3);
 		
+		packageBooking.car().selectCarBy(CarType.PREMIUM);
+		
+		//Verify Trip Details using at least 5 validations.
+		//TODO
 		
 
 	}
 
 	@AfterMethod
 	public void after() {
-//		this.travelocityHome.quit();
+		this.travelocityHome.quit();
 	}
 
 }

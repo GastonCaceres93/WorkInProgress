@@ -74,8 +74,8 @@ public class ValidatePage {
 
 	private boolean validateCompleteText(ElementToValidate element) {
 		try {
-			WebElement webEl = (new WebDriverWait(webDriver, 3)
-					.until(ExpectedConditions.presenceOfElementLocated(element.locator())));
+			WebElement webEl = getElement(element.locator());
+			System.out.println(element.value()+"=="+webEl.getText());
 			return element.value() != null && element.value().equalsIgnoreCase(webEl.getText());
 		} catch (Exception e) {
 			return false;
@@ -84,17 +84,20 @@ public class ValidatePage {
 
 	private boolean validatePartialText(ElementToValidate element) {
 		try {
-			WebElement webEl = (new WebDriverWait(webDriver, 3)
-					.until(ExpectedConditions.presenceOfElementLocated(element.locator())));
+			WebElement webEl = getElement(element.locator());
 			return element.value() != null && webEl.getText().contains(element.value());
 		} catch (Exception e) {
 			return false;
 		}
 	}
+	
+	private WebElement getElement(By by){
+		return (new WebDriverWait(webDriver, 3).until(ExpectedConditions.presenceOfElementLocated(by)));
+	}
 
 	private boolean isElementPresent(By locator) {
 		try {
-			(new WebDriverWait(webDriver, 3)).until(ExpectedConditions.presenceOfElementLocated(locator));
+			getElement(locator);
 			return true;
 		} catch (NoSuchElementException e) {
 			return false;
