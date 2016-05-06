@@ -107,5 +107,12 @@ public class PackageFlight {
 	public boolean flightDone() {
 		return flightDone;
 	}
+	
+	public PackageFlightInfo getDepartureFlightInfo(){
+		return departureFlight;
+	}
+	public PackageFlightInfo getRetournFlightInfo(){
+		return retournFlight;
+	}
 
 }

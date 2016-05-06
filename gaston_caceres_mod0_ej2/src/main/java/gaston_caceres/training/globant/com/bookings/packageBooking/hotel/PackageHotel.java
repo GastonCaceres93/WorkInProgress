@@ -195,11 +195,19 @@ public class PackageHotel {
 	}
 
 	// five needed
-	public Set<ElementToValidate> getElementsToValidateHotelSearch() {
+	public Set<ElementToValidate> getElementsToValidateHotelSearchPage() {
 		Set<ElementToValidate> elements = new HashSet<ElementToValidate>();
 
-		elements.add(new ElementToValidate(By.id("hotel-name"), null, hotel.getName(),
-				ValidationType.IS_ELEMENT_PRESENT, ValidationType.COMPLETE_TEXT));
+		elements.add(new ElementToValidate(null, null, "https://www.travelocity.com/packagesearch?", ValidationType.PARTIAL_URL));
+
+		elements.add(new ElementToValidate(By.id("packagewizard"), null, null, ValidationType.IS_ELEMENT_PRESENT));
+
+		elements.add(new ElementToValidate(By.xpath(".//*[@Id='packageSearchTitle']/span"), null,
+				"Start by choosing your hotel", ValidationType.IS_ELEMENT_PRESENT, ValidationType.PARTIAL_TEXT));
+		
+		elements.add(new ElementToValidate(By.id("packageSearchResults"), null, null, ValidationType.IS_ELEMENT_PRESENT));
+		
+		elements.add(new ElementToValidate(By.id("hot-result-refine-filter-title"), null, null, ValidationType.IS_ELEMENT_PRESENT));
 
 		return elements;
 	}

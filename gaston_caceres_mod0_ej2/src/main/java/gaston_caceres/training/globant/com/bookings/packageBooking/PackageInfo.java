@@ -2,6 +2,7 @@ package gaston_caceres.training.globant.com.bookings.packageBooking;
 
 import org.joda.time.DateTime;
 
+import gaston_caceres.training.globant.com.bookings.packageBooking.flight.PackageFlightInfo;
 import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.HotelInfo;
 
 public class PackageInfo {
@@ -16,6 +17,8 @@ public class PackageInfo {
 	private int adults;
 
 	private HotelInfo hotel;
+	private PackageFlightInfo departureFlight;
+	private PackageFlightInfo retournFlight;
 	private int rooms;
 
 	private String carModel;
@@ -109,6 +112,19 @@ public class PackageInfo {
 
 	public int getRooms() {
 		return rooms;
+	}
+	
+	public void setDepartureFlight(PackageFlightInfo flightInfo) {
+		departureFlight = flightInfo;
+	}
+	public PackageFlightInfo getDepartureFlight(){
+		return departureFlight;
+	}
+	public void setRetourneFlight(PackageFlightInfo flightInfo) {
+		retournFlight = flightInfo;
+	}
+	public PackageFlightInfo getRetournFlight(){
+		return retournFlight;
 	}
 
 }

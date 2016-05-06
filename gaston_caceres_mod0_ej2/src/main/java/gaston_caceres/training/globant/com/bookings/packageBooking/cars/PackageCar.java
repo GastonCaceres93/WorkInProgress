@@ -27,6 +27,7 @@ public class PackageCar {
 		try {
 			car = carList.findElement(By.xpath("td[" + carPosition + "]/div/a"));
 		} catch (NoSuchElementException e) {
+			
 		}finally {
 			carPosition++;
 		}

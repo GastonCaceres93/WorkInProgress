@@ -1,5 +1,10 @@
 package gaston_caceres.training.globant.com.bookings.packageBooking;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -11,6 +16,7 @@ import gaston_caceres.training.globant.com.bookings.packageBooking.cars.PackageC
 import gaston_caceres.training.globant.com.bookings.packageBooking.flight.PackageFlight;
 import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.PackageHotel;
 import gaston_caceres.training.globant.com.utils.CalendarElement;
+import gaston_caceres.training.globant.com.utils.ElementToValidate;
 
 public class PackageBooking {
 
@@ -134,6 +140,7 @@ public class PackageBooking {
 		if (hotel == null) {
 			hotel = new PackageHotel(webDriver);
 		}
+		packageInfo.setHotel(hotel.getHotelInfo());
 		return this.hotel;
 	}
 
@@ -146,6 +153,8 @@ public class PackageBooking {
 		if (flight == null) {
 			flight = new PackageFlight(webDriver);
 		}
+		packageInfo.setDepartureFlight(flight.getDepartureFlightInfo());
+		packageInfo.setRetourneFlight(flight.getRetournFlightInfo());
 		return flight;
 	}
 
@@ -172,6 +181,50 @@ public class PackageBooking {
 
 	public static void updateCurrentHandle(String newHandle) {
 		currentHandle = newHandle;
+	}
+	
+	public boolean checkPackageBookingResult(){
+		boolean validBooking = true;
+		
+		//cada uno tiene 2 elementos, el primero es el viaje de ida y el segundo es el viaje de regreso
+		List<WebElement> departureAirports = webDriver.findElements(By.id("departureairport"));
+		List<WebElement> arrivalAirports = webDriver.findElements(By.id("arrivalairport"));
+		List<WebElement> departureTimes = webDriver.findElements(By.id("departuretime"));
+		List<WebElement> arrivalTimes = webDriver.findElements(By.id("arrivaltime"));
+		
+		
+		return validBooking;
+	}
+	
+	public Set<ElementToValidate> getElementsToValidateBooking(){
+		Set<ElementToValidate> elements = new HashSet<ElementToValidate>();
+		
+		System.out.println(packageInfo.getArrivalAirport());
+		System.out.println(packageInfo.getDepartureAirport());
+
+		System.out.println("======================================");
+		
+		System.out.println(packageInfo.getDepartureFlight().getDepartureAirport());
+		System.out.println(packageInfo.getDepartureFlight().getArrivalAirport());
+		System.out.println(packageInfo.getDepartureFlight().getDepartureTime());
+		System.out.println(packageInfo.getDepartureFlight().getArrivalTime());
+		
+		System.out.println("======================================");
+		System.out.println(packageInfo.getRetournFlight().getDepartureAirport());
+		System.out.println(packageInfo.getRetournFlight().getArrivalAirport());
+		System.out.println(packageInfo.getRetournFlight().getDepartureTime());
+		System.out.println(packageInfo.getRetournFlight().getArrivalTime());
+		
+		System.out.println("======================================");
+		
+		
+		System.out.println(packageInfo.getPackagePrice());
+		System.out.println(packageInfo.getDepartureDate());
+		System.out.println(packageInfo.getRetournDate());
+		System.out.println(packageInfo.getHotel().getName());
+		System.out.println(packageInfo.getHotel().getStars());
+
+		return elements;
 	}
 
 }

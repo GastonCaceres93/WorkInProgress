@@ -104,6 +104,7 @@ public class ExerciseTwoTests {
 
 		packageBooking.search();
 		//Verify results page using at least 5 validations.
+		assert (pageValidation.validElements(packageBooking.hotel().getElementsToValidateHotelSearchPage()));
 		
 		
 		//hotel and room
@@ -129,7 +130,7 @@ public class ExerciseTwoTests {
 		
 		//Verify Trip Details using at least 5 validations.
 		//TODO
-		
+		assert(pageValidation.validElements(packageBooking.getElementsToValidateBooking()));
 
 	}
 

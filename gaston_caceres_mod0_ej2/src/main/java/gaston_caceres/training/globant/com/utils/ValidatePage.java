@@ -74,7 +74,8 @@ public class ValidatePage {
 
 	private boolean validateCompleteText(ElementToValidate element) {
 		try {
-			WebElement webEl = getElement(element.locator());
+//			WebElement webEl = getElement(element.locator());
+			WebElement webEl = (new WebDriverWait(webDriver, 10).until(ExpectedConditions.presenceOfElementLocated(element.locator())));
 			System.out.println(element.value()+"=="+webEl.getText());
 			return element.value() != null && element.value().equalsIgnoreCase(webEl.getText());
 		} catch (Exception e) {
@@ -84,7 +85,8 @@ public class ValidatePage {
 
 	private boolean validatePartialText(ElementToValidate element) {
 		try {
-			WebElement webEl = getElement(element.locator());
+//			WebElement webEl = getElement(element.locator());
+			WebElement webEl = (new WebDriverWait(webDriver, 10).until(ExpectedConditions.presenceOfElementLocated(element.locator())));
 			return element.value() != null && webEl.getText().contains(element.value());
 		} catch (Exception e) {
 			return false;
@@ -92,16 +94,15 @@ public class ValidatePage {
 	}
 	
 	private WebElement getElement(By by){
-		return (new WebDriverWait(webDriver, 3).until(ExpectedConditions.presenceOfElementLocated(by)));
+		return (new WebDriverWait(webDriver, 10).until(ExpectedConditions.presenceOfElementLocated(by)));
 	}
 
 	private boolean isElementPresent(By locator) {
 		try {
-			getElement(locator);
+//			getElement(locator);
+			WebElement element = (new WebDriverWait(webDriver, 10).until(ExpectedConditions.presenceOfElementLocated(locator)));
 			return true;
-		} catch (NoSuchElementException e) {
-			return false;
-		} catch (TimeoutException e) {
+		}catch (Exception e) {
 			return false;
 		}
 	}
