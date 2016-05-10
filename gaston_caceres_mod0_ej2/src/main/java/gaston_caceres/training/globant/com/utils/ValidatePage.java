@@ -3,8 +3,6 @@ package gaston_caceres.training.globant.com.utils;
 import java.util.Set;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -74,35 +72,34 @@ public class ValidatePage {
 
 	private boolean validateCompleteText(ElementToValidate element) {
 		try {
-//			WebElement webEl = getElement(element.locator());
 			WebElement webEl = (new WebDriverWait(webDriver, 10).until(ExpectedConditions.presenceOfElementLocated(element.locator())));
 			System.out.println(element.value()+"=="+webEl.getText());
 			return element.value() != null && element.value().equalsIgnoreCase(webEl.getText());
 		} catch (Exception e) {
+			System.out.print("validateCompleteText");
 			return false;
 		}
 	}
 
 	private boolean validatePartialText(ElementToValidate element) {
 		try {
-//			WebElement webEl = getElement(element.locator());
 			WebElement webEl = (new WebDriverWait(webDriver, 10).until(ExpectedConditions.presenceOfElementLocated(element.locator())));
 			return element.value() != null && webEl.getText().contains(element.value());
 		} catch (Exception e) {
+			System.out.print("validatePartialText");
+			e.printStackTrace();
 			return false;
 		}
 	}
 	
-	private WebElement getElement(By by){
-		return (new WebDriverWait(webDriver, 10).until(ExpectedConditions.presenceOfElementLocated(by)));
-	}
 
+	@SuppressWarnings("unused")
 	private boolean isElementPresent(By locator) {
 		try {
-//			getElement(locator);
 			WebElement element = (new WebDriverWait(webDriver, 10).until(ExpectedConditions.presenceOfElementLocated(locator)));
 			return true;
 		}catch (Exception e) {
+			System.out.print("isElementPresent");
 			return false;
 		}
 	}

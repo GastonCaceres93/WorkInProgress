@@ -1,6 +1,5 @@
 package gaston_caceres.training.globant.com.utils;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -42,7 +41,11 @@ public class CalendarElement {
 		String dateFormated = getDateFormated(date, CALENDAR_TITLE_FORMAT);
 		initCalendars();
 		while (!monthIsVisible(dateFormated)) {
-			nextMonth();
+			if(shouldGoBack(date)){
+				prevMonth();
+			}else{
+				nextMonth();
+			}
 		}
 		getCalendar(dateFormated).findElement(By.linkText(String.valueOf(date.getDayOfMonth()))).click();
 		return this;
@@ -51,7 +54,7 @@ public class CalendarElement {
 	private WebElement getCalendar(String date) {
 		String calendarOneTitle = this.calendarOne.findElement(By.xpath("header/h2")).getText();
 		String calendarTwoTitle = this.calendarTwo.findElement(By.xpath("header/h2")).getText();
-
+		
 		if (date.equalsIgnoreCase(calendarOneTitle)) {
 			return this.calendarOne;
 		} else if (date.equalsIgnoreCase(calendarTwoTitle)) {
@@ -67,19 +70,7 @@ public class CalendarElement {
 
 	//TODO buscar mejor forma de lidiar con fecha localizada (Apr 2016 vs Abr 2016)
 	private String getDateFormated(DateTime date, String format) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-		String formattedDate = null;
-		try {
-			DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.ENGLISH);
-			formattedDate = df.format(date.toDate());
-
-			SimpleDateFormat fs = new SimpleDateFormat("MM/dd/yy");
-			formattedDate = dateFormat.format(fs.parse(formattedDate));
-
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return formattedDate;
+		return  new SimpleDateFormat(format,Locale.ENGLISH).format(date.toDate());
 	}
 
 	private void initCalendars() {
@@ -95,6 +86,16 @@ public class CalendarElement {
 		} catch (Exception e) {
 			return (new WebDriverWait(webDriver, 2)).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".cal.show-second-month")));
 		}
+	}
+	private boolean shouldGoBack(DateTime date){
+		SimpleDateFormat format = new SimpleDateFormat("MMM yyyy",Locale.ENGLISH);
+		DateTime firstCalendar = null;
+		try {
+			firstCalendar = new DateTime( format.parse(this.calendarOne.findElement(By.xpath("header/h2")).getText()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date.getMonthOfYear()<firstCalendar.getMonthOfYear(); 
 	}
 
 }

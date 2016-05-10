@@ -1,14 +1,15 @@
 package gaston_caceres.training.globant.com;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import gaston_caceres.training.globant.com.bookings.CruisesBooking;
+import gaston_caceres.training.globant.com.bookings.cruises.CruisesBooking;
 import gaston_caceres.training.globant.com.bookings.flight.FlightBooking;
+import gaston_caceres.training.globant.com.bookings.hotel.HotelBooking;
 import gaston_caceres.training.globant.com.bookings.packageBooking.PackageBooking;
-import gaston_caceres.training.globant.com.bookings.HotelBooking;
 
 public class TravelocityHome {
 
@@ -52,7 +53,8 @@ public class TravelocityHome {
 	}
 
 	public HotelBooking goHotel() {
-		hotelsLink.click();
+		// hotelsLink.click();
+		webDriver.findElement(By.id("primary-header-hotel")).click();
 		return new HotelBooking(webDriver);
 	}
 

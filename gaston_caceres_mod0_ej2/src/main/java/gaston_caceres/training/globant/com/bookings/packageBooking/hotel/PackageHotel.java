@@ -194,7 +194,6 @@ public class PackageHotel {
 		return elements;
 	}
 
-	// five needed
 	public Set<ElementToValidate> getElementsToValidateHotelSearchPage() {
 		Set<ElementToValidate> elements = new HashSet<ElementToValidate>();
 

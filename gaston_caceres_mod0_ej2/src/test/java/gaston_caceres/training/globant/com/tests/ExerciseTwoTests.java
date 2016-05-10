@@ -7,12 +7,16 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import gaston_caceres.training.globant.com.TravelocityHome;
+import gaston_caceres.training.globant.com.bookings.cruises.CruisesBooking;
+import gaston_caceres.training.globant.com.bookings.cruises.misc.CruiseLenght;
+import gaston_caceres.training.globant.com.bookings.cruises.misc.Destinations;
 import gaston_caceres.training.globant.com.bookings.flight.FlightBooking;
 import gaston_caceres.training.globant.com.bookings.flight.FlightInfo;
 import gaston_caceres.training.globant.com.bookings.flight.FlightReview;
 import gaston_caceres.training.globant.com.bookings.flight.FlightSelection;
 import gaston_caceres.training.globant.com.bookings.flight.FlightSort;
 import gaston_caceres.training.globant.com.bookings.flight.WhoIsTraveling;
+import gaston_caceres.training.globant.com.bookings.hotel.HotelBooking;
 import gaston_caceres.training.globant.com.bookings.packageBooking.PackageBooking;
 import gaston_caceres.training.globant.com.bookings.packageBooking.cars.CarType;
 import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.HotelSort;
@@ -28,7 +32,7 @@ public class ExerciseTwoTests {
 		travelocityHome = new TravelocityHome(new FirefoxDriver());
 	}
 
-//	@Test
+	@Test
 	public void test_01() {
 
 		long seventy_days_from_now = 6048000000L;
@@ -92,7 +96,7 @@ public class ExerciseTwoTests {
 
 		PackageBooking packageBooking = travelocityHome.goHome().goPackageBooking().bookFlightPlusHotelAndCar();
 		ValidatePage pageValidation = new ValidatePage(travelocityHome.getDriver());
-	
+
 		packageBooking.selectDepartureAirport(departureAirport);
 		packageBooking.selectArrivalAirport(arrivalAirport);
 		packageBooking.selectDepartureDate(departureDate);
@@ -103,35 +107,106 @@ public class ExerciseTwoTests {
 		packageBooking.rooms(rooms);
 
 		packageBooking.search();
-		//Verify results page using at least 5 validations.
+		// Verify results page using at least 5 validations.
 		assert (pageValidation.validElements(packageBooking.hotel().getElementsToValidateHotelSearchPage()));
-		
-		
-		//hotel and room
+
+		// hotel and room
 		packageBooking.hotel().sort(HotelSort.BY_PRICE);
 
-		//Sort by price. Verify the results were correctly sorted.
+		// Sort by price. Verify the results were correctly sorted.
 		assert (pageValidation.validElements(packageBooking.hotel().getElementsToValidateSort()));
-		
+
 		packageBooking.hotel().selectHotelBy(HotelStars.THREE);
 		packageBooking.hotel().continueBooking();
-		
-		//In the new page, verify the hotel is the selected in the previous step using at least 3 validations.
-		assert(pageValidation.validElements(packageBooking.hotel().getElementsToValidateHotelSelected()));
-		
+
+		// In the new page, verify the hotel is the selected in the previous
+		// step using at least 3 validations.
+		assert (pageValidation.validElements(packageBooking.hotel().getElementsToValidateHotelSelected()));
+
 		packageBooking.hotel().selectFirstRoomAvailable();
-		
-		
-		//flight
+
+		// flight
 		packageBooking.flight().selectDepartureFlight(1);
 		packageBooking.flight().selectRetournFlight(3);
-		
-		packageBooking.car().selectCarBy(CarType.PREMIUM);
-		
-		//Verify Trip Details using at least 5 validations.
-		//TODO
-		assert(pageValidation.validElements(packageBooking.getElementsToValidateBooking()));
 
+		packageBooking.car().selectCarBy(CarType.PREMIUM);
+
+		// Verify Trip Details using at least 5 validations.
+		// TODO
+		assert (pageValidation.validElements(packageBooking.getElementsToValidateBooking()));
+
+	}
+
+	@Test
+	public void test_03() {
+		long seventy_days = 6048000000L;
+		long three_days = 259200000L;
+		DateTime checkIn = new DateTime(System.currentTimeMillis() + seventy_days);
+		DateTime checkOut = new DateTime(checkIn.getMillis() + three_days);
+		String hotelName = "Dunes Manor Hotel";
+
+		HotelBooking hotelBooking = travelocityHome.goHome().goHotel();
+		hotelBooking.selectCheckInDate(checkIn);
+		hotelBooking.selectCheckOutDate(checkOut);
+		hotelBooking.setHotelName(hotelName);
+
+		hotelBooking.search();
+
+		// esta validacion va a fallar siempre, el hotel nunca es encontrado a
+		// menos que se seleccione el hotel (Dunes Manor Hotel & Suites) que se encuentra en el listado del
+		// tooltip al escribir "dunes manor hotel"
+		assert (!hotelBooking.hotelSearch().hotelFound());
+
+	}
+
+	@Test
+	public void test_04() {
+		long seventy_days = 6048000000L;
+		long thirteen_days = 1123200000L;
+		DateTime departureDate = new DateTime(System.currentTimeMillis() + seventy_days);
+		DateTime retournDate = new DateTime(departureDate.getMillis() + thirteen_days);
+
+		DateTime checkInDate = new DateTime();
+		DateTime checkOutDate = new DateTime(checkInDate.getMillis() + (86400000L * 3));
+
+		String departureAirport = "LAS";
+		String arrivalAirport = "LAX";
+		int adults = 1;
+		int children = 0;
+		int rooms = 1;
+
+		PackageBooking packageBooking = travelocityHome.goHome().goPackageBooking().bookFlightPlusHotel();
+
+		packageBooking.selectDepartureAirport(departureAirport);
+		packageBooking.selectArrivalAirport(arrivalAirport);
+		packageBooking.selectDepartureDate(departureDate);
+		packageBooking.selectRetournDate(retournDate);
+
+		packageBooking.partialHotelStay();
+
+		packageBooking.selectHotelCheckInDate(checkInDate);
+		packageBooking.selectHotelCheckOutDate(checkOutDate);
+
+		packageBooking.childrenTraveling(children);
+		packageBooking.adultsTraveling(adults);
+		packageBooking.rooms(rooms);
+
+		packageBooking.search();
+
+		assert (!packageBooking.validHotelStay());
+	}
+
+	@Test
+	public void test_05() {
+		CruisesBooking cruisesBooking = travelocityHome.goHome().goCruising();
+		cruisesBooking.selectDestination(Destinations.EUROPE);
+		cruisesBooking.selectDepartureMonth("07 2017");
+
+		cruisesBooking.search();
+
+		cruisesBooking.cruiseSelection().filterByLenght(CruiseLenght.TEN_TO_FOURTEEN_NIGHTS);
+		cruisesBooking.cruiseSelection().selectCruise(1);
+		assert (cruisesBooking.cruiseSelection().isItineraryVisible());
 	}
 
 	@AfterMethod

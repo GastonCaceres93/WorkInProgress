@@ -1,6 +1,5 @@
 package gaston_caceres.training.globant.com.bookings.packageBooking;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +10,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import gaston_caceres.training.globant.com.bookings.packageBooking.cars.PackageCar;
 import gaston_caceres.training.globant.com.bookings.packageBooking.flight.PackageFlight;
@@ -19,6 +20,8 @@ import gaston_caceres.training.globant.com.utils.CalendarElement;
 import gaston_caceres.training.globant.com.utils.ElementToValidate;
 
 public class PackageBooking {
+	
+	private static final String INVALID_PARTIAL_HOTEL_STAY= "our partial check-in and check-out dates must fall within your arrival and departure dates. Please review your dates.";
 
 	private WebDriver webDriver;
 
@@ -199,32 +202,40 @@ public class PackageBooking {
 	public Set<ElementToValidate> getElementsToValidateBooking(){
 		Set<ElementToValidate> elements = new HashSet<ElementToValidate>();
 		
-		System.out.println(packageInfo.getArrivalAirport());
-		System.out.println(packageInfo.getDepartureAirport());
-
-		System.out.println("======================================");
-		
-		System.out.println(packageInfo.getDepartureFlight().getDepartureAirport());
-		System.out.println(packageInfo.getDepartureFlight().getArrivalAirport());
-		System.out.println(packageInfo.getDepartureFlight().getDepartureTime());
-		System.out.println(packageInfo.getDepartureFlight().getArrivalTime());
-		
-		System.out.println("======================================");
-		System.out.println(packageInfo.getRetournFlight().getDepartureAirport());
-		System.out.println(packageInfo.getRetournFlight().getArrivalAirport());
-		System.out.println(packageInfo.getRetournFlight().getDepartureTime());
-		System.out.println(packageInfo.getRetournFlight().getArrivalTime());
-		
-		System.out.println("======================================");
-		
-		
-		System.out.println(packageInfo.getPackagePrice());
-		System.out.println(packageInfo.getDepartureDate());
-		System.out.println(packageInfo.getRetournDate());
-		System.out.println(packageInfo.getHotel().getName());
-		System.out.println(packageInfo.getHotel().getStars());
-
 		return elements;
+	}
+	
+	public PackageBooking partialHotelStay(){
+		webDriver.findElement(By.id("partialHotelBooking")).click();
+		return this;
+	}
+	
+	public PackageBooking selectHotelCheckInDate(DateTime date) {
+		WebElement checkIn = webDriver.findElement(By.id("package-checkin"));
+		checkIn.clear();
+		checkIn.click();
+
+		new CalendarElement(webDriver).selectDate(date);
+		return this;
+	}
+
+	public PackageBooking selectHotelCheckOutDate(DateTime date) {
+		WebElement checkOut = webDriver.findElement(By.id("package-checkout"));
+		checkOut.clear();
+		checkOut.click();
+		new CalendarElement(webDriver).selectDate(date);
+		return this;
+	}
+	
+	public boolean validHotelStay(){
+		boolean valid = true;
+		try {
+			WebElement invalidDates = new WebDriverWait(webDriver, 10).until(ExpectedConditions.presenceOfElementLocated(By.className("partialStayDatesOutOfRange")));
+			valid = invalidDates.getText().equals(INVALID_PARTIAL_HOTEL_STAY);
+		} catch (Exception e) {
+		}
+		
+		return valid;
 	}
 
 }
