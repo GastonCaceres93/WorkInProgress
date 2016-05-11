@@ -16,7 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import gaston_caceres.training.globant.com.bookings.packageBooking.cars.PackageCar;
 import gaston_caceres.training.globant.com.bookings.packageBooking.flight.PackageFlight;
 import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.PackageHotel;
-import gaston_caceres.training.globant.com.utils.CalendarElement;
+import gaston_caceres.training.globant.com.utils.CalendarHelper;
 import gaston_caceres.training.globant.com.utils.ElementToValidate;
 
 public class PackageBooking {
@@ -51,12 +51,15 @@ public class PackageBooking {
 	private PackageHotel hotel;
 	private PackageFlight flight;
 	private PackageCar car;
+	
+	private CalendarHelper calendarHelper;
 
 	private static String currentHandle;
 
 	public PackageBooking(WebDriver webDriver) {
 		this.webDriver = webDriver;
 		packageInfo = new PackageInfo();
+		calendarHelper= new CalendarHelper(webDriver);
 		PageFactory.initElements(webDriver, this);
 	}
 
@@ -92,14 +95,14 @@ public class PackageBooking {
 	public PackageBooking selectDepartureDate(DateTime date) {
 		departureDate.click();
 		packageInfo.setDepartureDate(date);
-		new CalendarElement(webDriver).selectDate(date);
+		calendarHelper.selectDate(date);
 		return this;
 	}
 
 	public PackageBooking selectRetournDate(DateTime date) {
 		retournDate.click();
 		packageInfo.setRetournDate(date);
-		new CalendarElement(webDriver).selectDate(date);
+		calendarHelper.selectDate(date);
 		return this;
 	}
 
@@ -215,7 +218,7 @@ public class PackageBooking {
 		checkIn.clear();
 		checkIn.click();
 
-		new CalendarElement(webDriver).selectDate(date);
+		calendarHelper.selectDate(date);
 		return this;
 	}
 
@@ -223,7 +226,7 @@ public class PackageBooking {
 		WebElement checkOut = webDriver.findElement(By.id("package-checkout"));
 		checkOut.clear();
 		checkOut.click();
-		new CalendarElement(webDriver).selectDate(date);
+		calendarHelper.selectDate(date);
 		return this;
 	}
 	

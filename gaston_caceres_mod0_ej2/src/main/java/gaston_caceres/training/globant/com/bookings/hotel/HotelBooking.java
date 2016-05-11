@@ -4,26 +4,25 @@ import org.joda.time.DateTime;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import gaston_caceres.training.globant.com.utils.CalendarElement;
+import gaston_caceres.training.globant.com.utils.CalendarHelper;
 
 public class HotelBooking {
 
 	private WebDriver webDriver;
 	private String hotelName;
-	private DateTime checkIn;
-	private DateTime checkOut;
 
 	private HotelSearch hotelSearch;
 	
 	private String currentHandle;
+	
+	private CalendarHelper calendarHelper;
 
 	public HotelBooking(WebDriver driver) {
 		webDriver = driver;
-		PageFactory.initElements(webDriver, this);
+		calendarHelper = new CalendarHelper(driver);
 	}
 
 	public HotelBooking hotelOnly() {
@@ -38,16 +37,14 @@ public class HotelBooking {
 	}
 
 	public HotelBooking selectCheckInDate(DateTime date) {
-		this.checkIn = date;
 		findElement(By.id("hotel-checkin"), 10).click();
-		new CalendarElement(webDriver).selectDate(date);
+		calendarHelper.selectDate(date);
 		return this;
 	}
 
 	public HotelBooking selectCheckOutDate(DateTime date) {
-		this.checkOut = date;
 		findElement(By.id("hotel-checkout"), 10).click();
-		new CalendarElement(webDriver).selectDate(date);
+		calendarHelper.selectDate(date);
 		return this;
 	}
 

@@ -10,7 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import gaston_caceres.training.globant.com.utils.CalendarElement;
+import gaston_caceres.training.globant.com.utils.CalendarHelper;
 
 public class FlightBooking {
 
@@ -41,11 +41,14 @@ public class FlightBooking {
 	private int connectionsCount = 2;
 
 	private static FlightInfo flightInfo;
+	
+	private CalendarHelper calendarHelper;
 
 	public FlightBooking(WebDriver webDriver) {
 		this.webDriver = webDriver;
 		flightInfo = new FlightInfo();
 		PageFactory.initElements(webDriver, this);
+		calendarHelper = new CalendarHelper(webDriver);
 	}
 
 	public FlightBooking roundTrip() {
@@ -70,7 +73,7 @@ public class FlightBooking {
 
 		flightInfo.setDepartureDate(date);
 
-		new CalendarElement(webDriver).selectDate(date);
+		calendarHelper.selectDate(date);
 		return this;
 	}
 
@@ -79,7 +82,7 @@ public class FlightBooking {
 
 		flightInfo.setRetournDate(date);
 
-		new CalendarElement(webDriver).selectDate(date);
+		calendarHelper.selectDate(date);
 		return this;
 	}
 

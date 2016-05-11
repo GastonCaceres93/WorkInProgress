@@ -155,7 +155,7 @@ public class ExerciseTwoTests {
 		// esta validacion va a fallar siempre, el hotel nunca es encontrado a
 		// menos que se seleccione el hotel (Dunes Manor Hotel & Suites) que se encuentra en el listado del
 		// tooltip al escribir "dunes manor hotel"
-		assert (!hotelBooking.hotelSearch().hotelFound());
+		assert (hotelBooking.hotelSearch().hotelFound());
 
 	}
 

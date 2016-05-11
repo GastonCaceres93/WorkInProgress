@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import gaston_caceres.training.globant.com.utils.CalendarElement;
+import gaston_caceres.training.globant.com.utils.CalendarHelper;
 
 public class FlightsConnections {
 
@@ -18,12 +18,15 @@ public class FlightsConnections {
 	private String fromBoxLocator = "flight-%d-origin";
 	private String toBoxLocator = "flight-%d-destination";
 	private String calendarBoxLocator = "flight-%d-departing";
+	
+	private CalendarHelper calendarHelper;
 
 	public FlightsConnections(WebDriver webDriver, int connectionNumber) {
 		this.webDriver = webDriver;
 		fromBoxLocator = String.format(fromBoxLocator, connectionNumber);
 		toBoxLocator = String.format(toBoxLocator, connectionNumber);
 		calendarBoxLocator = String.format(calendarBoxLocator, connectionNumber);
+		calendarHelper = new CalendarHelper(webDriver);
 		initElements();
 	}
 
@@ -45,7 +48,7 @@ public class FlightsConnections {
 
 	public FlightsConnections selectDepartureDate(DateTime date) {
 		this.calendarBox.click();
-		new CalendarElement(webDriver).selectDate(date);
+		calendarHelper.selectDate(date);
 		return this;
 	}
 

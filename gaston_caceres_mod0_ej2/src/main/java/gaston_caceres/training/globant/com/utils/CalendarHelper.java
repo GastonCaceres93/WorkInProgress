@@ -11,7 +11,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class CalendarElement {
+public class CalendarHelper {
 
 	private WebDriver webDriver;
 
@@ -21,23 +21,23 @@ public class CalendarElement {
 	private WebElement calendarOne;
 	private WebElement calendarTwo;
 
-	public CalendarElement(WebDriver webDriver) {
+	public CalendarHelper(WebDriver webDriver) {
 		this.webDriver = webDriver;
 	}
 
-	public CalendarElement nextMonth() {
+	public CalendarHelper nextMonth() {
 		webDriver.findElement(By.cssSelector(".btn-paging.btn-secondary.next")).click();;
 		initCalendars();
 		return this;
 	}
 
-	public CalendarElement prevMonth() {
+	public CalendarHelper prevMonth() {
 		webDriver.findElement(By.cssSelector(".btn-paging.btn-secondary.prev")).click();;
 		initCalendars();
 		return this;
 	}
 
-	public CalendarElement selectDate(DateTime date) {
+	public CalendarHelper selectDate(DateTime date) {
 		String dateFormated = getDateFormated(date, CALENDAR_TITLE_FORMAT);
 		initCalendars();
 		while (!monthIsVisible(dateFormated)) {

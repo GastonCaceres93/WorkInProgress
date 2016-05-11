@@ -96,7 +96,7 @@ public class ValidatePage {
 	@SuppressWarnings("unused")
 	private boolean isElementPresent(By locator) {
 		try {
-			WebElement element = (new WebDriverWait(webDriver, 10).until(ExpectedConditions.presenceOfElementLocated(locator)));
+			WebElement element = (new WebDriverWait(webDriver, 20).until(ExpectedConditions.presenceOfElementLocated(locator)));
 			return true;
 		}catch (Exception e) {
 			System.out.print("isElementPresent");
