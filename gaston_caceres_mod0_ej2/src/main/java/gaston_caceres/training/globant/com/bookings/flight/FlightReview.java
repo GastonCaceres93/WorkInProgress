@@ -12,6 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import gaston_caceres.training.globant.com.bookings.flight.misc.FlightInfo;
 import gaston_caceres.training.globant.com.utils.ElementToValidate;
 import gaston_caceres.training.globant.com.utils.ValidationType;
 

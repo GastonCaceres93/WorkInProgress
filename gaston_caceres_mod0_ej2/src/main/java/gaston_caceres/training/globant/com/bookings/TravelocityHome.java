@@ -1,4 +1,4 @@
-package gaston_caceres.training.globant.com;
+package gaston_caceres.training.globant.com.bookings;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

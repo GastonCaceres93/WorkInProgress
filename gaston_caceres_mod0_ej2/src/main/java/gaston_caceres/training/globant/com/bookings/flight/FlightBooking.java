@@ -10,6 +10,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import gaston_caceres.training.globant.com.bookings.flight.misc.FlightInfo;
 import gaston_caceres.training.globant.com.utils.CalendarHelper;
 
 public class FlightBooking {

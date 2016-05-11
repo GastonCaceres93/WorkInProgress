@@ -1,4 +1,4 @@
-package gaston_caceres.training.globant.com.bookings.flight;
+package gaston_caceres.training.globant.com.bookings.flight.misc;
 
 public enum FlightSort {
 	PRICE_LOWEST("Price (Lowest)"), 
