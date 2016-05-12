@@ -12,8 +12,6 @@ public class PackageFlight {
 
 	private WebDriver webDriver;
 
-	private FlightSort sortedBy;
-
 	private boolean flightDone;
 
 	private PackageFlightInfo departureFlight;
@@ -31,7 +29,6 @@ public class PackageFlight {
 	public PackageFlight sort(FlightSort sortBy) {
 		inProcess();
 		try {
-			this.sortedBy = sortBy;
 			new WebDriverWait(webDriver, 20).until(ExpectedConditions.presenceOfElementLocated(sortBy.locator()))
 					.click();
 		} catch (Exception e) {
@@ -82,7 +79,7 @@ public class PackageFlight {
 		try {
 			flight = flights.get(flightPosition - 1);
 		} catch (IndexOutOfBoundsException e) {
-			e.printStackTrace();
+			//what should i do when the flight requested does not exist...
 		}
 		return flight != null ? flight : getFlight(flights.size());
 	}
@@ -107,11 +104,12 @@ public class PackageFlight {
 	public boolean flightDone() {
 		return flightDone;
 	}
-	
-	public PackageFlightInfo getDepartureFlightInfo(){
+
+	public PackageFlightInfo getDepartureFlightInfo() {
 		return departureFlight;
 	}
-	public PackageFlightInfo getRetournFlightInfo(){
+
+	public PackageFlightInfo getRetournFlightInfo() {
 		return retournFlight;
 	}
 

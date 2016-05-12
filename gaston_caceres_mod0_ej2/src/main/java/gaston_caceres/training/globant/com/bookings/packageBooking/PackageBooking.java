@@ -1,7 +1,9 @@
 package gaston_caceres.training.globant.com.bookings.packageBooking;
 
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -18,10 +20,11 @@ import gaston_caceres.training.globant.com.bookings.packageBooking.flight.Packag
 import gaston_caceres.training.globant.com.bookings.packageBooking.hotel.PackageHotel;
 import gaston_caceres.training.globant.com.utils.CalendarHelper;
 import gaston_caceres.training.globant.com.utils.ElementToValidate;
+import gaston_caceres.training.globant.com.utils.ValidationType;
 
 public class PackageBooking {
-	
-	private static final String INVALID_PARTIAL_HOTEL_STAY= "our partial check-in and check-out dates must fall within your arrival and departure dates. Please review your dates.";
+
+	private static final String INVALID_PARTIAL_HOTEL_STAY = "our partial check-in and check-out dates must fall within your arrival and departure dates. Please review your dates.";
 
 	private WebDriver webDriver;
 
@@ -51,7 +54,7 @@ public class PackageBooking {
 	private PackageHotel hotel;
 	private PackageFlight flight;
 	private PackageCar car;
-	
+
 	private CalendarHelper calendarHelper;
 
 	private static String currentHandle;
@@ -59,7 +62,7 @@ public class PackageBooking {
 	public PackageBooking(WebDriver webDriver) {
 		this.webDriver = webDriver;
 		packageInfo = new PackageInfo();
-		calendarHelper= new CalendarHelper(webDriver);
+		calendarHelper = new CalendarHelper(webDriver);
 		PageFactory.initElements(webDriver, this);
 	}
 
@@ -188,31 +191,73 @@ public class PackageBooking {
 	public static void updateCurrentHandle(String newHandle) {
 		currentHandle = newHandle;
 	}
-	
-	public boolean checkPackageBookingResult(){
-		boolean validBooking = true;
-		
-		//cada uno tiene 2 elementos, el primero es el viaje de ida y el segundo es el viaje de regreso
-		List<WebElement> departureAirports = webDriver.findElements(By.id("departureairport"));
-		List<WebElement> arrivalAirports = webDriver.findElements(By.id("arrivalairport"));
-		List<WebElement> departureTimes = webDriver.findElements(By.id("departuretime"));
-		List<WebElement> arrivalTimes = webDriver.findElements(By.id("arrivaltime"));
-		
-		
+
+	public boolean checkPackageBookingResult() {
+		boolean validBooking = false;
+
+		WebElement hotelName = new WebDriverWait(webDriver, 10)
+				.until(ExpectedConditions.presenceOfElementLocated(By.id("A12004_16036")));
+		List<WebElement> travelDates = new WebDriverWait(webDriver, 10)
+				.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.id("A5006_12722")));
+		if (hotelName.getText().equals(packageInfo.getHotel().getName()) && validTravelDates(travelDates)
+				&& correctCarSelection()) {
+			validBooking = true;
+		}
+
 		return validBooking;
 	}
-	
-	public Set<ElementToValidate> getElementsToValidateBooking(){
+
+	private boolean validTravelDates(List<WebElement> travelDates) {
+		boolean valid = false;
+		SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH);
+		String departureDate = format.format(packageInfo.getDepartureDate().toDate());
+		String retournDate = format.format(packageInfo.getRetournDate().toDate());
+		String departureDateVisible = null;
+		String retournDateVisible = null;
+
+		if (travelDates != null && travelDates.size() == 2) {
+			departureDateVisible = travelDates.get(0).getText();
+			retournDateVisible = travelDates.get(1).getText();
+			if (departureDate.contains(departureDateVisible) && retournDate.contains(retournDateVisible)) {
+				valid = true;
+			}
+		}
+
+		return valid;
+	}
+
+	private boolean correctCarSelection() {
+		try {
+			String carType = car().getCarTypeSelected().visibleName();
+			new WebDriverWait(webDriver, 10).until(
+					ExpectedConditions.presenceOfElementLocated(By.xpath(".//*[contains(text(),'" + carType + "')]")));
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	public Set<ElementToValidate> getElementsToValidateBooking() {
 		Set<ElementToValidate> elements = new HashSet<ElementToValidate>();
-		
+		SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH);
+		String departureDate = format.format(packageInfo.getDepartureDate().toDate());
+		String retournDate = format.format(packageInfo.getRetournDate().toDate());
+
+		elements.add(new ElementToValidate(By.id("A12004_16036"), null, packageInfo.getHotel().getName(),
+				ValidationType.IS_ELEMENT_PRESENT, ValidationType.COMPLETE_TEXT));
+		elements.add(new ElementToValidate(By.xpath(".//*[@Id='A5006_12722'][1]"), null, departureDate,
+				ValidationType.IS_ELEMENT_PRESENT, ValidationType.COMPLETE_TEXT));
+		elements.add(new ElementToValidate(By.xpath(".//*[@Id='A5006_12722'][2]"), null, retournDate,
+				ValidationType.IS_ELEMENT_PRESENT, ValidationType.COMPLETE_TEXT));
+
 		return elements;
 	}
-	
-	public PackageBooking partialHotelStay(){
+
+	public PackageBooking partialHotelStay() {
 		webDriver.findElement(By.id("partialHotelBooking")).click();
 		return this;
 	}
-	
+
 	public PackageBooking selectHotelCheckInDate(DateTime date) {
 		WebElement checkIn = webDriver.findElement(By.id("package-checkin"));
 		checkIn.clear();
@@ -229,15 +274,16 @@ public class PackageBooking {
 		calendarHelper.selectDate(date);
 		return this;
 	}
-	
-	public boolean validHotelStay(){
+
+	public boolean validHotelStay() {
 		boolean valid = true;
 		try {
-			WebElement invalidDates = new WebDriverWait(webDriver, 10).until(ExpectedConditions.presenceOfElementLocated(By.className("partialStayDatesOutOfRange")));
+			WebElement invalidDates = new WebDriverWait(webDriver, 10)
+					.until(ExpectedConditions.presenceOfElementLocated(By.className("partialStayDatesOutOfRange")));
 			valid = invalidDates.getText().equals(INVALID_PARTIAL_HOTEL_STAY);
 		} catch (Exception e) {
 		}
-		
+
 		return valid;
 	}
 

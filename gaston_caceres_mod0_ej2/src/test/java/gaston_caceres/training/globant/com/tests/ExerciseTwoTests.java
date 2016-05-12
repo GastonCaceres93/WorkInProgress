@@ -63,13 +63,13 @@ public class ExerciseTwoTests {
 
 		FlightReview flightReview = flightSelection.selectFlight(1);
 
-		/**
+		/*
 		 * no estoy seguro en que pagina se realizarian las siguientes acciones,
-		 * quizas el examen esta desactualizado.<br>
+		 * quizas el examen esta desactualizado.
 		 * 5.In the new page (Select your departure to Los Angeles), select the
-		 * first result.<br>
+		 * first result.
 		 * 6. In the new page (Select your departure to Las Vegas), select the
-		 * third result. <br>
+		 * third result. 
 		 * 7.In the pop-up, select “no, thanks, maybe later”
 		 */
 
@@ -107,33 +107,25 @@ public class ExerciseTwoTests {
 		packageBooking.rooms(rooms);
 
 		packageBooking.search();
-		// Verify results page using at least 5 validations.
 		assert (pageValidation.validElements(packageBooking.hotel().getElementsToValidateHotelSearchPage()));
 
-		// hotel and room
 		packageBooking.hotel().sort(HotelSort.BY_PRICE);
 
-		// Sort by price. Verify the results were correctly sorted.
 		assert (pageValidation.validElements(packageBooking.hotel().getElementsToValidateSort()));
 
 		packageBooking.hotel().selectHotelBy(HotelStars.THREE);
 		packageBooking.hotel().continueBooking();
 
-		// In the new page, verify the hotel is the selected in the previous
-		// step using at least 3 validations.
 		assert (pageValidation.validElements(packageBooking.hotel().getElementsToValidateHotelSelected()));
 
 		packageBooking.hotel().selectFirstRoomAvailable();
 
-		// flight
 		packageBooking.flight().selectDepartureFlight(1);
 		packageBooking.flight().selectRetournFlight(3);
 
 		packageBooking.car().selectCarBy(CarType.PREMIUM);
 
-		// Verify Trip Details using at least 5 validations.
-		// TODO
-		assert (pageValidation.validElements(packageBooking.getElementsToValidateBooking()));
+		assert (packageBooking.checkPackageBookingResult());
 
 	}
 
@@ -203,7 +195,9 @@ public class ExerciseTwoTests {
 		cruisesBooking.selectDepartureMonth("07 2017");
 
 		cruisesBooking.search();
-
+		
+		assert(cruisesBooking.validCruiseSearch());
+		
 		cruisesBooking.cruiseSelection().filterByLenght(CruiseLenght.TEN_TO_FOURTEEN_NIGHTS);
 		cruisesBooking.cruiseSelection().selectCruise(1);
 		assert (cruisesBooking.cruiseSelection().isItineraryVisible());
@@ -213,5 +207,24 @@ public class ExerciseTwoTests {
 	public void after() {
 		this.travelocityHome.quit();
 	}
+//	
+//	public static void main(String []args){
+//		
+//		TravelocityHome travelocityHome = new TravelocityHome(new FirefoxDriver());
+//		CruisesBooking cruisesBooking = travelocityHome.goHome().goCruising();
+//		cruisesBooking.selectDestination(Destinations.EUROPE);
+//		cruisesBooking.selectDepartureMonth("07 2017");
+//
+//		cruisesBooking.search();
+//		
+//		assert(cruisesBooking.validCruiseSearch());
+//		
+//		cruisesBooking.cruiseSelection().filterByLenght(CruiseLenght.TEN_TO_FOURTEEN_NIGHTS);
+//		cruisesBooking.cruiseSelection().selectCruise(1);
+//		assert (cruisesBooking.cruiseSelection().isItineraryVisible());
+//		
+//		travelocityHome.quit();
+//		
+//	}
 
 }

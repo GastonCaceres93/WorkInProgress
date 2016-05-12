@@ -72,19 +72,6 @@ public class FlightSelection {
 		}
 		return new FlightReview(webDriver);
 	}
-	// public FlightSelection selectFlight(int flightPosition) {
-	// try {
-	// loadFlightsFound();
-	// this.flightSelected = this.flightsFound.get(flightPosition - 1);
-	// String xpath = getFlightBuyXpath();
-	// WebElement buy = (new WebDriverWait(webDriver, 10))
-	// .until(ExpectedConditions.presenceOfElementLocated(By.xpath(xpath)));
-	// buy.click();
-	// } catch (IndexOutOfBoundsException e) {
-	// e.printStackTrace();
-	// }
-	// return this;
-	// }
 
 	private String getFlightBuyXpath() {
 		return ".//*[@id='" + this.flightSelected.getAttribute("id") + "']" + "//button";

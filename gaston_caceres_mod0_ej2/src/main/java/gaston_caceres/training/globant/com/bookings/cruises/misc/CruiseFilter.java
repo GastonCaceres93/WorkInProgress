@@ -14,23 +14,24 @@ public class CruiseFilter {
 	}
 
 	public CruiseFilter filterByCruiseLenght(CruiseLenght lenght) {
-		if(isSimpleFilter()){
+		if (isSimpleFilter()) {
 			webDriver.findElement(lenght.locator()).click();
-		}else{
-			new WebDriverWait(webDriver, 3).until(ExpectedConditions.and(
-					ExpectedConditions.presenceOfElementLocated(CruiseLenght.CONTAINER_LOCATOR),
-					ExpectedConditions.elementToBeClickable(CruiseLenght.CONTAINER_LOCATOR)));
-			
+		} else {
+			new WebDriverWait(webDriver, 3).until(
+					ExpectedConditions.and(ExpectedConditions.presenceOfElementLocated(CruiseLenght.CONTAINER_LOCATOR),
+							ExpectedConditions.elementToBeClickable(CruiseLenght.CONTAINER_LOCATOR)));
+
 			webDriver.findElement(CruiseLenght.CONTAINER_LOCATOR).click();
 			webDriver.findElement(lenght.locator()).click();
 			webDriver.findElement(CruiseLenght.UPDATE_RESULTS_LOCATOR).click();
 		}
 		return this;
 	}
-	
-	private boolean isSimpleFilter(){
+
+	public boolean isSimpleFilter() {
 		try {
-			new WebDriverWait(webDriver, 5).until(ExpectedConditions.presenceOfElementLocated(By.id("cruise-side-menu")));
+			new WebDriverWait(webDriver, 5)
+					.until(ExpectedConditions.presenceOfElementLocated(By.id("cruise-side-menu")));
 			return true;
 		} catch (Exception e) {
 			return false;

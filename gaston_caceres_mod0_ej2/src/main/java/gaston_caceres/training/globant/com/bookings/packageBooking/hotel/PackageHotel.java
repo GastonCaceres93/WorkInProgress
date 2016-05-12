@@ -103,17 +103,6 @@ public class PackageHotel {
 		return price;
 	}
 
-	private String getHotelTelephone(WebElement hotelRaw) {
-		String telephone = hotelRaw.findElement(By.cssSelector(".telesales-number")).getText();
-		return telephone;
-	}
-
-	private Integer getHotelUserReviews(WebElement hotelRaw) {
-		String userReviews = hotelRaw.findElement(By.cssSelector(".superlative-reviews")).findElement(By.tagName("a"))
-				.getText();
-		return Integer.valueOf(userReviews.split(" ")[0]);
-	}
-
 	private boolean hotelListReady() {
 		return (new WebDriverWait(webDriver, 10)).until(
 				ExpectedConditions.and(ExpectedConditions.presenceOfElementLocated(By.id("packageSearchResults")),

@@ -51,11 +51,10 @@ public class CruisesSelection {
 	public boolean isItineraryVisible(){
 		try {
 			new WebDriverWait(webDriver,10).until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".box.collapsible-box.loader-box.loaded.open")));
-//			cruise.findElement(By.cssSelector(".box.collapsible-box.loader-box.loaded.open"));
 			return true;
 		} catch (Exception e) {
 			return false;
 		}
 	}
-
+	
 }
