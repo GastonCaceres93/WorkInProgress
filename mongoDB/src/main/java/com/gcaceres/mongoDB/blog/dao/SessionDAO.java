@@ -15,7 +15,7 @@
  *
  */
 
-package com.gcaceres.mongoDB.blog;
+package com.gcaceres.mongoDB.blog.dao;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;

@@ -65,4 +65,10 @@ public class Homework {
 		}
 
 	}
+	
+	public static void main(String[]args){
+		MongoClient client = new MongoClient();
+		MongoDatabase db = client.getDatabase("q7");
+		
+	}
 }

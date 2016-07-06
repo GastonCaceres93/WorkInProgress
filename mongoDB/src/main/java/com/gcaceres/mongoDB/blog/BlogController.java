@@ -18,20 +18,11 @@
 package com.gcaceres.mongoDB.blog;
 
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.MongoDatabase;
-import freemarker.template.Configuration;
-import freemarker.template.SimpleHash;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.bson.Document;
-import spark.Request;
-import spark.Response;
-import spark.Route;
+import static spark.Spark.get;
+import static spark.Spark.post;
+import static spark.Spark.setPort;
 
-import javax.servlet.http.Cookie;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -39,9 +30,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static spark.Spark.get;
-import static spark.Spark.post;
-import static spark.Spark.setPort;
+import javax.servlet.http.Cookie;
+
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.bson.Document;
+
+import com.gcaceres.mongoDB.blog.dao.BlogPostDAO;
+import com.gcaceres.mongoDB.blog.dao.SessionDAO;
+import com.gcaceres.mongoDB.blog.dao.UserDAO;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoDatabase;
+
+import freemarker.template.Configuration;
+import freemarker.template.SimpleHash;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import spark.Request;
+import spark.Response;
+import spark.Route;
 
 /**
  * This class encapsulates the controllers for the blog web application.  It delegates all interaction with MongoDB
@@ -56,6 +63,12 @@ public class BlogController {
     private final SessionDAO sessionDAO;
 
     public static void main(String[] args) throws IOException {
+    	
+    	get("/hello", new Route() {
+			public Object handle(Request req, Response res) throws Exception {
+				return "Hello World";
+			}
+		});
         if (args.length == 0) {
             new BlogController("mongodb://localhost");
         }
@@ -77,7 +90,7 @@ public class BlogController {
         initializeRoutes();
     }
 
-    abstract class FreemarkerBasedRoute extends Route {
+    abstract class FreemarkerBasedRoute implements Route {
         final Template template;
 
         /**
@@ -86,11 +99,12 @@ public class BlogController {
          * @param path The route path which is used for matching. (e.g. /hello, users/:name)
          */
         protected FreemarkerBasedRoute(final String path, final String templateName) throws IOException {
-            super(path);
+//            super(path);
+        	
             template = cfg.getTemplate(templateName);
         }
 
-        @Override
+//        @Override
         public Object handle(Request request, Response response) {
             StringWriter writer = new StringWriter();
             try {
@@ -109,7 +123,7 @@ public class BlogController {
 
     private void initializeRoutes() throws IOException {
         // this is the blog home page
-        get(new FreemarkerBasedRoute("/", "blog_template.ftl") {
+        get("/",new FreemarkerBasedRoute("/", "blog_template.ftl") {
             @Override
             public void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
                 String username = sessionDAO.findUserNameBySessionId(getSessionCookie(request));
@@ -127,7 +141,7 @@ public class BlogController {
         });
 
         // used to display actual blog post detail page
-        get(new FreemarkerBasedRoute("/post/:permalink", "entry_template.ftl") {
+        get("/",new FreemarkerBasedRoute("/post/:permalink", "entry_template.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
                 String permalink = request.params(":permalink");
@@ -156,7 +170,7 @@ public class BlogController {
         });
 
         // handle the signup post
-        post(new FreemarkerBasedRoute("/signup", "signup.ftl") {
+        post("/signup",new FreemarkerBasedRoute("/signup", "signup.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
                 String email = request.queryParams("email");
@@ -194,7 +208,7 @@ public class BlogController {
         });
 
         // present signup form for blog
-        get(new FreemarkerBasedRoute("/signup", "signup.ftl") {
+        get("/signup",new FreemarkerBasedRoute("/signup", "signup.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer)
                     throws IOException, TemplateException {
@@ -215,7 +229,7 @@ public class BlogController {
         });
 
         // will present the form used to process new blog posts
-        get(new FreemarkerBasedRoute("/newpost", "newpost_template.ftl") {
+        get("/newpost",new FreemarkerBasedRoute("/newpost", "newpost_template.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
 
@@ -236,7 +250,7 @@ public class BlogController {
         });
 
         // handle the new post submission
-        post(new FreemarkerBasedRoute("/newpost", "newpost_template.ftl") {
+        post("/newpost",new FreemarkerBasedRoute("/newpost", "newpost_template.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer)
                     throws IOException, TemplateException {
@@ -275,7 +289,7 @@ public class BlogController {
             }
         });
 
-        get(new FreemarkerBasedRoute("/welcome", "welcome.ftl") {
+        get("welcome",new FreemarkerBasedRoute("/welcome", "welcome.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
 
@@ -298,7 +312,7 @@ public class BlogController {
         });
 
         // process a new comment
-        post(new FreemarkerBasedRoute("/newcomment", "entry_template.ftl") {
+        post("/newcomment",new FreemarkerBasedRoute("/newcomment", "entry_template.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer)
                     throws IOException, TemplateException {
@@ -334,7 +348,7 @@ public class BlogController {
         });
 
         // present the login page
-        get(new FreemarkerBasedRoute("/login", "login.ftl") {
+        get("/login",new FreemarkerBasedRoute("/login", "login.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
                 SimpleHash root = new SimpleHash();
@@ -348,7 +362,7 @@ public class BlogController {
 
         // process output coming from login form. On success redirect folks to the welcome page
         // on failure, just return an error and let them try again.
-        post(new FreemarkerBasedRoute("/login", "login.ftl") {
+        post("/login",new FreemarkerBasedRoute("/login", "login.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
 
@@ -387,7 +401,7 @@ public class BlogController {
         });
 
         // Show the posts filed under a certain tag
-        get(new FreemarkerBasedRoute("/tag/:thetag", "blog_template.ftl") {
+        get("/tag/:thetag",new FreemarkerBasedRoute("/tag/:thetag", "blog_template.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer)
                     throws IOException, TemplateException {
@@ -410,7 +424,7 @@ public class BlogController {
 
 
         // tells the user that the URL is dead
-        get(new FreemarkerBasedRoute("/post_not_found", "post_not_found.ftl") {
+        get("/post_not_found",new FreemarkerBasedRoute("/post_not_found", "post_not_found.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
                 SimpleHash root = new SimpleHash();
@@ -419,7 +433,7 @@ public class BlogController {
         });
 
         // allows the user to logout of the blog
-        get(new FreemarkerBasedRoute("/logout", "signup.ftl") {
+        get("/logout",new FreemarkerBasedRoute("/logout", "signup.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
 
@@ -444,9 +458,8 @@ public class BlogController {
             }
         });
 
-
         // used to process internal errors
-        get(new FreemarkerBasedRoute("/internal_error", "error_template.ftl") {
+        get("/internal_error",new FreemarkerBasedRoute("/internal_error", "error_template.ftl") {
             @Override
             protected void doHandle(Request request, Response response, Writer writer) throws IOException, TemplateException {
                 SimpleHash root = new SimpleHash();
@@ -545,6 +558,12 @@ public class BlogController {
     private Configuration createFreemarkerConfiguration() {
         Configuration retVal = new Configuration();
         retVal.setClassForTemplateLoading(BlogController.class, "/freemarker");
+//        try {
+//        	retVal.setDirectoryForTemplateLoading(new File("/src/main/resources/freemaker"));
+//		} catch (Exception e) {
+//			System.out.println("Falied to load templates directory");
+//			e.printStackTrace();
+//		}
         return retVal;
     }
 }
