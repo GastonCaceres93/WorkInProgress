@@ -7,6 +7,7 @@ import static com.mongodb.client.model.Aggregates.unwind;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Sorts.ascending;
 import static com.mongodb.client.model.Updates.pull;
+import static com.mongodb.client.model.Projections.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,9 +15,11 @@ import java.util.List;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.mongodb.morphia.aggregation.Projection;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 
@@ -70,5 +73,21 @@ public class Homework {
 		MongoClient client = new MongoClient();
 		MongoDatabase db = client.getDatabase("q7");
 		
+		MongoCollection<Document> imagesC = db.getCollection("images");
+		MongoCollection<Document> albumsC = db.getCollection("albums"); 
+//		MongoCursor<Document> images = imagesC.aggregate(Arrays.asList(
+//			include("_id"))).iterator();
+		MongoCursor<Document> images = imagesC.find().iterator();
+		int id = 0;
+		while(images.hasNext()){
+			id = images.next().getInteger("_id");
+			Document album = null;
+			album = albumsC.find(eq("images",id)).first();
+			if(album==null){
+				System.out.println(id);
+				imagesC.deleteOne(new Document("_id",id));
+			}
+		}
 	}
+	
 }
